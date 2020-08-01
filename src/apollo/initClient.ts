@@ -12,7 +12,12 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   const { token } = authenticate();
-  return { headers: { ...headers, "x-shared-secret": token } };
+
+  if (!token) {
+    window.location.href = "/login";
+  }
+
+  return { headers: { ...headers, Authorization: `Basic ${token}` } };
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
