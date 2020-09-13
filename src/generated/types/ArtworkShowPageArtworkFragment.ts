@@ -36,7 +36,7 @@ export interface ArtworkShowPageArtworkFragment_primaryImage_thumbnail {
 export interface ArtworkShowPageArtworkFragment_primaryImage {
   __typename: "Image";
   id: string;
-  thumbnail: ArtworkShowPageArtworkFragment_primaryImage_thumbnail | null;
+  thumbnail: ArtworkShowPageArtworkFragment_primaryImage_thumbnail;
 }
 
 export interface ArtworkShowPageArtworkFragment_images_thumbnail_urls {
@@ -55,7 +55,7 @@ export interface ArtworkShowPageArtworkFragment_images_thumbnail {
 export interface ArtworkShowPageArtworkFragment_images {
   __typename: "Image";
   id: string;
-  thumbnail: ArtworkShowPageArtworkFragment_images_thumbnail | null;
+  thumbnail: ArtworkShowPageArtworkFragment_images_thumbnail;
 }
 
 export interface ArtworkShowPageArtworkFragment_links {

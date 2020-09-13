@@ -1,7 +1,8 @@
 import React from "react";
 import gql from "graphql-tag";
-import { Grid, Stack, Button, Plus, ResponsiveImage } from "@auspices/eos";
+import { Grid, Stack, Plus, ResponsiveImage } from "@auspices/eos";
 import { ArtworkImagesFragment } from "../../generated/types/ArtworkImagesFragment";
+import { FileUploadButton } from "../FileUploadButton";
 
 export const ARTWORK_IMAGES_FRAGMENT = gql`
   fragment ArtworkImagesFragment on Artwork {
@@ -30,10 +31,15 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
 }) => {
   return (
     <Stack {...rest}>
-      <Button>
+      <FileUploadButton
+        onUpload={(url) => {
+          console.log(url);
+          return Promise.resolve();
+        }}
+      >
         <Plus size={4} strokeWidth="1px" mr={3} />
         image
-      </Button>
+      </FileUploadButton>
 
       <Grid p={6}>
         {artwork.images.map((image) => {

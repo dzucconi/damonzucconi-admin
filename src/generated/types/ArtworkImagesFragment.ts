@@ -23,7 +23,7 @@ export interface ArtworkImagesFragment_images_thumbnail {
 export interface ArtworkImagesFragment_images {
   __typename: "Image";
   id: string;
-  thumbnail: ArtworkImagesFragment_images_thumbnail | null;
+  thumbnail: ArtworkImagesFragment_images_thumbnail;
 }
 
 export interface ArtworkImagesFragment {

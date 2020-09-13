@@ -38,7 +38,7 @@ export interface ArtworkShowPageUpdateMutation_update_artwork_artwork_primaryIma
 export interface ArtworkShowPageUpdateMutation_update_artwork_artwork_primaryImage {
   __typename: "Image";
   id: string;
-  thumbnail: ArtworkShowPageUpdateMutation_update_artwork_artwork_primaryImage_thumbnail | null;
+  thumbnail: ArtworkShowPageUpdateMutation_update_artwork_artwork_primaryImage_thumbnail;
 }
 
 export interface ArtworkShowPageUpdateMutation_update_artwork_artwork_images_thumbnail_urls {
@@ -57,7 +57,7 @@ export interface ArtworkShowPageUpdateMutation_update_artwork_artwork_images_thu
 export interface ArtworkShowPageUpdateMutation_update_artwork_artwork_images {
   __typename: "Image";
   id: string;
-  thumbnail: ArtworkShowPageUpdateMutation_update_artwork_artwork_images_thumbnail | null;
+  thumbnail: ArtworkShowPageUpdateMutation_update_artwork_artwork_images_thumbnail;
 }
 
 export interface ArtworkShowPageUpdateMutation_update_artwork_artwork_links {

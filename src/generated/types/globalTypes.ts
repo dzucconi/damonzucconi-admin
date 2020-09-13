@@ -14,6 +14,12 @@ export enum State {
   SELECTED = "SELECTED",
 }
 
+export enum SupportedUpload {
+  GIF = "GIF",
+  JPEG = "JPEG",
+  PNG = "PNG",
+}
+
 export interface ArtworkAttributes {
   title: string;
   year: number;
