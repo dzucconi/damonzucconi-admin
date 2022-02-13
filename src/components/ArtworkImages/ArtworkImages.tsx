@@ -1,7 +1,10 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Grid, Stack, Plus, ResponsiveImage } from "@auspices/eos";
-import { ArtworkImagesFragment } from "../../generated/graphql";
+import {
+  ArtworkImagesFragment,
+  useAddArtworkImageMutation,
+} from "../../generated/graphql";
 import { FileUploadButton } from "../FileUploadButton";
 
 export const ARTWORK_IMAGES_FRAGMENT = gql`
@@ -21,6 +24,17 @@ export const ARTWORK_IMAGES_FRAGMENT = gql`
   }
 `;
 
+gql`
+  mutation AddArtworkImageMutation($id: ID!, $image: ImageAttributes!) {
+    add_artwork_entity(input: { id: $id, entity: { image: $image } }) {
+      artwork {
+        id
+        ...ArtworkImagesFragment
+      }
+    }
+  }
+`;
+
 type ArtworkImagesProps = {
   artwork: ArtworkImagesFragment;
 };
@@ -29,12 +43,13 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
   artwork,
   ...rest
 }) => {
+  const [_, addArtworkImage] = useAddArtworkImageMutation();
+
   return (
     <Stack {...rest}>
       <FileUploadButton
         onUpload={(url) => {
-          console.log(url);
-          return Promise.resolve();
+          return addArtworkImage({ id: artwork.id, image: { url } });
         }}
       >
         <Plus size={4} strokeWidth="1px" mr={3} />

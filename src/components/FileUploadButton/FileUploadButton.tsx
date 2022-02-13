@@ -52,8 +52,8 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setAcceptedFiles([...event.target.files]);
-      setUploadingFIles([...event.target.files]);
+      setAcceptedFiles([...(event.target.files ?? [])]);
+      setUploadingFIles([...(event.target.files ?? [])]);
     },
     []
   );
@@ -63,7 +63,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
       try {
         onUpload(url);
       } catch (err) {
-        sendError({ body: err.message });
+        sendError({ body: (err as Error).message });
       }
 
       const filename = file.name.substring(

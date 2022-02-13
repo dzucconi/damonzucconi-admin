@@ -68,7 +68,7 @@ export type Artwork = {
   position: Scalars['Int'];
   slug: Scalars['String'];
   src?: Maybe<Scalars['String']>;
-  state: Scalars['String'];
+  state: State;
   title: Scalars['String'];
   unit?: Maybe<Scalars['String']>;
   updated_at: Scalars['String'];
@@ -481,13 +481,21 @@ export type UpdateArtworkMutationPayload = {
 
 export type ArtworkAttachmentsFragment = { __typename?: 'Artwork', attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }> };
 
-export type ArtworkAttributesFragment = { __typename?: 'Artwork', id: string, slug: string, state: string, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null };
+export type ArtworkAttributesFragment = { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null };
 
 export type ArtworkEditionsFragment = { __typename?: 'Artwork', editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> };
 
 export type ArtworkEmbedsFragment = { __typename?: 'Artwork', id: string, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }> };
 
 export type ArtworkImagesFragment = { __typename?: 'Artwork', id: string, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> };
+
+export type AddArtworkImageMutationVariables = Exact<{
+  id: Scalars['ID'];
+  image: ImageAttributes;
+}>;
+
+
+export type AddArtworkImageMutation = { __typename?: 'Mutation', add_artwork_entity?: { __typename?: 'AddArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> } } | null };
 
 export type ArtworkLinksFragment = { __typename?: 'Artwork', id: string, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }> };
 
@@ -501,7 +509,7 @@ export type FilesUploaderQuery = { __typename?: 'Query', presigned_upload_urls: 
 export type ArtworkIndexPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArtworkIndexPageQuery = { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: string, slug: string, title: string }> };
+export type ArtworkIndexPageQuery = { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string }> };
 
 export type AddArtworkMutationVariables = Exact<{
   attributes: ArtworkAttributes;
@@ -510,14 +518,14 @@ export type AddArtworkMutationVariables = Exact<{
 
 export type AddArtworkMutation = { __typename?: 'Mutation', add_artwork?: { __typename?: 'AddArtworkMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string } } | null };
 
-export type ArtworkShowPageArtworkFragment = { __typename?: 'Artwork', id: string, slug: string, state: string, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }>, attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> };
+export type ArtworkShowPageArtworkFragment = { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }>, attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> };
 
 export type ArtworkShowPageQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type ArtworkShowPageQuery = { __typename?: 'Query', artwork: { __typename?: 'Artwork', id: string, slug: string, state: string, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }>, attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> } };
+export type ArtworkShowPageQuery = { __typename?: 'Query', artwork: { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }>, attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> } };
 
 export type ArtworkShowPageUpdateMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -525,7 +533,7 @@ export type ArtworkShowPageUpdateMutationVariables = Exact<{
 }>;
 
 
-export type ArtworkShowPageUpdateMutation = { __typename?: 'Mutation', update_artwork?: { __typename?: 'UpdateArtworkMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string, state: string, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }>, attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> } } | null };
+export type ArtworkShowPageUpdateMutation = { __typename?: 'Mutation', update_artwork?: { __typename?: 'UpdateArtworkMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, url: string, title?: string | null, kind: string, state: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }>, attachments: Array<{ __typename?: 'Attachment', id: string, title?: string | null, url: string, state: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: string, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> } } | null };
 
 export const ArtworkAttributesFragmentDoc = gql`
     fragment ArtworkAttributesFragment on Artwork {
@@ -634,6 +642,20 @@ ${ArtworkLinksFragmentDoc}
 ${ArtworkEmbedsFragmentDoc}
 ${ArtworkAttachmentsFragmentDoc}
 ${ArtworkEditionsFragmentDoc}`;
+export const AddArtworkImageMutationDocument = gql`
+    mutation AddArtworkImageMutation($id: ID!, $image: ImageAttributes!) {
+  add_artwork_entity(input: {id: $id, entity: {image: $image}}) {
+    artwork {
+      id
+      ...ArtworkImagesFragment
+    }
+  }
+}
+    ${ArtworkImagesFragmentDoc}`;
+
+export function useAddArtworkImageMutation() {
+  return Urql.useMutation<AddArtworkImageMutation, AddArtworkImageMutationVariables>(AddArtworkImageMutationDocument);
+};
 export const FilesUploaderQueryDocument = gql`
     query FilesUploaderQuery($fileTypes: [SupportedUpload!]!) {
   presigned_upload_urls(types: $fileTypes)

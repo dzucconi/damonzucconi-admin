@@ -25,11 +25,10 @@ import {
 import {
   ArtworkAttributes,
   ARTWORK_ATTRIBUTES_FRAGMENT,
-  Attributes,
 } from "../components/ArtworkAttributes";
 import { useHistory } from "react-router-dom";
 import {
-  ArtworkAttributes as TArtworkAttributes,
+  ArtworkAttributes as Attributes,
   useArtworkShowPageQuery,
   useArtworkShowPageUpdateMutation,
 } from "../generated/graphql";
@@ -97,10 +96,9 @@ export const ArtworkShowPage: React.FC = () => {
     variables: { id },
   });
 
-  const [_updateArtworkResult, updateArtwork] =
-    useArtworkShowPageUpdateMutation();
+  const [_, updateArtwork] = useArtworkShowPageUpdateMutation();
 
-  const handleSubmit = async (attributes: TArtworkAttributes) => {
+  const handleSubmit = async (attributes: Attributes) => {
     sendNotification({ body: "updating" });
 
     try {
@@ -115,7 +113,7 @@ export const ArtworkShowPage: React.FC = () => {
         history.push(`/artwork/${updatedArtwork.slug}`);
       }
     } catch (err) {
-      sendError({ body: err.message });
+      sendError({ body: (err as Error).message });
     }
   };
 

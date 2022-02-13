@@ -17,10 +17,10 @@ export const ARTWORK_INDEX_PAGE_QUERY = gql`
 `;
 
 const STATUS_COLORS = {
-  draft: "danger",
-  selected: "accent",
-  published: "secondary",
-  archived: "tertiary",
+  DRAFT: "danger",
+  SELECTED: "accent",
+  PUBLISHED: "secondary",
+  ARCHIVED: "tertiary",
 } as const;
 
 export const ArtworkIndexPage: React.FC = () => {
@@ -54,10 +54,7 @@ export const ArtworkIndexPage: React.FC = () => {
             >
               {artwork.title}
 
-              <Tag
-                ml={4}
-                bg={STATUS_COLORS[artwork.state as keyof typeof STATUS_COLORS]}
-              >
+              <Tag ml={4} bg={STATUS_COLORS[artwork.state]}>
                 {artwork.state}
               </Tag>
             </Button>
