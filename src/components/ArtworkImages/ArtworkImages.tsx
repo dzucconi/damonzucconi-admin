@@ -1,7 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Grid, Stack, Plus, ResponsiveImage } from "@auspices/eos";
-import { ArtworkImagesFragment } from "../../generated/types/ArtworkImagesFragment";
+import { ArtworkImagesFragment } from "../../generated/graphql";
 import { FileUploadButton } from "../FileUploadButton";
 
 export const ARTWORK_IMAGES_FRAGMENT = gql`

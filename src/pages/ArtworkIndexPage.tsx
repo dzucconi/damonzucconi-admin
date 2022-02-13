@@ -1,10 +1,9 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Helmet } from "react-helmet";
-import { useQuery } from "@apollo/react-hooks";
 import { Button, Stack, Loading, Tag } from "@auspices/eos";
 import { Link } from "react-router-dom";
-import { ArtworkIndexPageQuery } from "../generated/types/ArtworkIndexPageQuery";
+import { useArtworkIndexPageQuery } from "../generated/graphql";
 
 export const ARTWORK_INDEX_PAGE_QUERY = gql`
   query ArtworkIndexPageQuery {
@@ -25,15 +24,13 @@ const STATUS_COLORS = {
 } as const;
 
 export const ArtworkIndexPage: React.FC = () => {
-  const { data, loading, error } = useQuery<ArtworkIndexPageQuery>(
-    ARTWORK_INDEX_PAGE_QUERY
-  );
+  const [{ data, fetching, error }] = useArtworkIndexPageQuery();
 
   if (error) {
     throw error;
   }
 
-  if (loading || !data) {
+  if (fetching || !data) {
     return <Loading />;
   }
 

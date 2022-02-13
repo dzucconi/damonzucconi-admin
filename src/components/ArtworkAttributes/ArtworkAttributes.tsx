@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Input, Stack, Pill, Field, Button, Select } from "@auspices/eos";
 import gql from "graphql-tag";
-import { ArtworkAttributesFragment } from "../../generated/types/ArtworkAttributesFragment";
+import {
+  ArtworkAttributesFragment,
+  ArtworkAttributes as TArtworkAttributes,
+  State,
+} from "../../generated/graphql";
 
 const DEFAULT_VALUES = {
   year: new Date().getFullYear(),
@@ -30,17 +34,19 @@ export const ARTWORK_ATTRIBUTES_FRAGMENT = gql`
   }
 `;
 
-export type Attributes = {
-  year: number;
-  state: string;
-  title?: string;
-} & Record<string, string | number | boolean>;
+export type Attributes = TArtworkAttributes;
+
+// {
+//   year: number;
+//   state: string;
+//   title?: string;
+// } & Record<string, string | number | boolean>;
 
 type ArtworkAttributesProps = {
   defaults?: ArtworkAttributesFragment;
   label?: string;
-  onChange?(attributes: Attributes): void;
-  onSubmit(attributes: Attributes): void;
+  onChange?(attributes: TArtworkAttributes): void;
+  onSubmit(attributes: TArtworkAttributes): void;
 };
 
 export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
@@ -50,7 +56,8 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
   onSubmit,
 }) => {
   const [attributes, setAttributes] = useState<Attributes>({
-    state: defaults.state?.toUpperCase() ?? DEFAULT_VALUES.state,
+    title: "",
+    state: (defaults.state?.toUpperCase() ?? DEFAULT_VALUES.state) as State,
     year: defaults.year ?? DEFAULT_VALUES.year,
   });
 

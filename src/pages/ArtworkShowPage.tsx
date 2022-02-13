@@ -1,7 +1,6 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Helmet } from "react-helmet";
-import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useParams } from "react-router";
 import {
   Pill,
@@ -11,10 +10,6 @@ import {
   Loading,
   useAlerts,
 } from "@auspices/eos";
-import {
-  ArtworkShowPageQuery,
-  ArtworkShowPageQueryVariables,
-} from "../generated/types/ArtworkShowPageQuery";
 import {
   ArtworkImages,
   ARTWORK_IMAGES_FRAGMENT,
@@ -32,8 +27,12 @@ import {
   ARTWORK_ATTRIBUTES_FRAGMENT,
   Attributes,
 } from "../components/ArtworkAttributes";
-import { ArtworkShowPageUpdateMutation } from "../generated/types/ArtworkShowPageUpdateMutation";
 import { useHistory } from "react-router-dom";
+import {
+  ArtworkAttributes as TArtworkAttributes,
+  useArtworkShowPageQuery,
+  useArtworkShowPageUpdateMutation,
+} from "../generated/graphql";
 
 export const ARTWORK_SHOW_PAGE_ARTWORK_FRAGMENT = gql`
   fragment ArtworkShowPageArtworkFragment on Artwork {
@@ -94,22 +93,18 @@ export const ArtworkShowPage: React.FC = () => {
 
   const { sendError, sendNotification } = useAlerts();
 
-  const { data, loading, error } = useQuery<
-    ArtworkShowPageQuery,
-    ArtworkShowPageQueryVariables
-  >(ARTWORK_SHOW_PAGE_QUERY, {
+  const [{ data, fetching, error }] = useArtworkShowPageQuery({
     variables: { id },
   });
 
-  const [updateArtwork] = useMutation<ArtworkShowPageUpdateMutation>(
-    ARTWORK_SHOW_PAGE_UPDATE_MUTATION
-  );
+  const [_updateArtworkResult, updateArtwork] =
+    useArtworkShowPageUpdateMutation();
 
-  const handleSubmit = async (attributes: Attributes) => {
+  const handleSubmit = async (attributes: TArtworkAttributes) => {
     sendNotification({ body: "updating" });
 
     try {
-      const response = await updateArtwork({ variables: { id, attributes } });
+      const response = await updateArtwork({ id, attributes });
       const { artwork: updatedArtwork } = response.data!.update_artwork!;
 
       sendNotification({ body: `updated ${updatedArtwork.title}` });
@@ -127,12 +122,14 @@ export const ArtworkShowPage: React.FC = () => {
     throw error;
   }
 
-  if (loading || !data) {
+  if (fetching || !data) {
     return <Loading />;
   }
 
   const { artwork } = data;
   const [image] = artwork.primaryImage;
+
+  if (!artwork) return null;
 
   return (
     <>

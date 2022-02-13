@@ -1,14 +1,12 @@
 import React from "react";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
 import styled from "styled-components";
 import { Box, BoxProps, Stack } from "@auspices/eos";
 import { FileUpload } from "../../components/FileUpload";
 import {
-  FilesUploaderQuery,
-  FilesUploaderQueryVariables,
-} from "../../generated/types/FilesUploaderQuery";
-import { SupportedUpload } from "../../generated/types/globalTypes";
+  useFilesUploaderQuery,
+  SupportedUpload,
+} from "../../generated/graphql";
 
 export const FILES_UPLOADER_QUERY = gql`
   query FilesUploaderQuery($fileTypes: [SupportedUpload!]!) {
@@ -60,10 +58,7 @@ export const FilesUploader: React.FC<FilesUploaderProps> = ({
       ] as SupportedUpload
   );
 
-  const { data, error, loading } = useQuery<
-    FilesUploaderQuery,
-    FilesUploaderQueryVariables
-  >(FILES_UPLOADER_QUERY, {
+  const [{ data, error, fetching }] = useFilesUploaderQuery({
     variables: { fileTypes },
   });
 
@@ -71,7 +66,7 @@ export const FilesUploader: React.FC<FilesUploaderProps> = ({
     throw error;
   }
 
-  if (loading || !data) return null;
+  if (fetching || !data) return null;
 
   const uploads: [string, File][] = data.presigned_upload_urls.map((url, i) => [
     url,

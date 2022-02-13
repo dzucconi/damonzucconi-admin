@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
 import { Helmet } from "react-helmet";
-import { useMutation } from "@apollo/react-hooks";
 import { useAlerts } from "@auspices/eos";
-import { AddArtworkMutation } from "../generated/types/AddArtworkMutation";
 import { useHistory } from "react-router";
-import { ArtworkAttributes, Attributes } from "../components/ArtworkAttributes";
+import { ArtworkAttributes } from "../components/ArtworkAttributes";
+import {
+  ArtworkAttributes as TArtworkAttributes,
+  useAddArtworkMutation,
+} from "../generated/graphql";
 
-const ADD_ARTWORK_MUTATION = gql`
+gql`
   mutation AddArtworkMutation($attributes: ArtworkAttributes!) {
     add_artwork(input: { attributes: $attributes }) {
       artwork {
@@ -32,14 +34,14 @@ export const ArtworkNewPage: React.FC = () => {
 
   const [mode, setMode] = useState(Mode.Resting);
 
-  const [addArtwork] = useMutation<AddArtworkMutation>(ADD_ARTWORK_MUTATION);
+  const [_addArtworkResult, addArtwork] = useAddArtworkMutation();
 
-  const handleSubmit = async (attributes: Attributes) => {
+  const handleSubmit = async (attributes: TArtworkAttributes) => {
     setMode(Mode.Saving);
     sendNotification({ body: "saving" });
 
     try {
-      const response = await addArtwork({ variables: { attributes } });
+      const response = await addArtwork({ attributes });
 
       sendNotification({ body: "added artwork successfully" });
       setMode(Mode.Saved);
@@ -48,7 +50,7 @@ export const ArtworkNewPage: React.FC = () => {
 
       history.push(`/artwork/${id}`);
     } catch (err) {
-      sendError({ body: err.message });
+      sendError({ body: (err as Error).message });
       setMode(Mode.Error);
     }
   };

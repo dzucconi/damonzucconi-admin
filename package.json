@@ -2,35 +2,39 @@
   "name": "damonzucconi-admin",
   "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.6.1",
+    "@graphql-codegen/typescript-operations": "^2.3.0",
+    "@graphql-codegen/typescript-urql": "^3.5.1",
+    "@types/node": "^17.0.17",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-helmet": "^6.0.0",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/styled-components": "^5.1.22",
+    "@types/styled-system": "^5.1.15"
+  },
   "dependencies": {
-    "@apollo/react-hooks": "^3.1.5",
     "@auspices/eos": "^2.31.0",
-    "apollo-cache-inmemory": "^1.6.6",
-    "apollo-client": "^2.6.10",
-    "apollo-link": "^1.2.14",
-    "apollo-link-context": "^1.0.20",
-    "apollo-link-error": "^1.1.13",
-    "apollo-link-http": "^1.5.17",
     "axios": "^0.20.0",
-    "graphql": "^14.0.0",
-    "graphql-tag": "^2.12.6",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "graphql": "^16.3.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.0",
     "styled-components": "^5.3.3",
-    "typescript": "~3.9.6"
+    "typescript": "~3.9.6",
+    "urql": "^2.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gql:types": "apollo codegen:generate --target typescript --outputFlat src/generated/types",
-    "gql:types:clean": "rm -rf src/generated/types",
-    "gql:types:regenerate": "yarn gql:types:clean && yarn gql:types"
+    "gql": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,16 +50,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/node": "^14.0.14",
-    "@types/react": "^16.9.41",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-helmet": "^6.0.0",
-    "@types/react-router": "^5.1.8",
-    "@types/react-router-dom": "^5.1.5",
-    "@types/styled-components": "^5.1.22",
-    "@types/styled-system": "^5.1.15",
-    "apollo": "^2.33.9"
   }
 }
