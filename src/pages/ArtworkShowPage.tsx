@@ -105,6 +105,7 @@ export const ArtworkShowPage: React.FC = () => {
 
     try {
       const response = await updateArtwork({ id, attributes });
+
       const { artwork: updatedArtwork } = response.data!.update_artwork!;
 
       sendNotification({ body: `updated ${updatedArtwork.title}` });
