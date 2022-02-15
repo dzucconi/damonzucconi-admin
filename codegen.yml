@@ -1,6 +1,6 @@
 overwrite: true
-# schema: "https://api.damonzucconi.com/graph"
-schema: "http://localhost:5001/graph"
+schema: "https://api.damonzucconi.com/graph"
+# schema: "http://localhost:5001/graph"
 documents:
   - src/components/**/*.tsx
   - src/pages/**/*.tsx

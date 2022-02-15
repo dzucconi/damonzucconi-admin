@@ -10,6 +10,7 @@ import { FileUploadButton } from "../FileUploadButton";
 export const ARTWORK_IMAGES_FRAGMENT = gql`
   fragment ArtworkImagesFragment on Artwork {
     id
+    slug
     images {
       id
       thumbnail: resized(width: 256, height: 256) {
@@ -48,6 +49,7 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
   return (
     <Stack {...rest}>
       <FileUploadButton
+        slug={artwork.slug}
         onUpload={(url) => {
           return addArtworkImage({ id: artwork.id, image: { url } });
         }}
@@ -59,7 +61,7 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
       <Grid p={6}>
         {artwork.images.map((image) => {
           return (
-            image?.thumbnail && (
+            image.thumbnail && (
               <ResponsiveImage
                 key={image.id}
                 srcs={[image.thumbnail.urls._1x, image.thumbnail.urls._2x]}

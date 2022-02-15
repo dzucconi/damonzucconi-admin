@@ -6,11 +6,12 @@ import { FileUpload } from "../../components/FileUpload";
 import {
   useFilesUploaderQuery,
   SupportedUpload,
+  PresignedUrlAttributes,
 } from "../../generated/graphql";
 
 export const FILES_UPLOADER_QUERY = gql`
-  query FilesUploaderQuery($fileTypes: [SupportedUpload!]!) {
-    presigned_upload_urls(types: $fileTypes)
+  query FilesUploaderQuery($uploads: [PresignedUrlAttributes!]!) {
+    presigned_upload_urls(uploads: $uploads)
   }
 `;
 
@@ -42,24 +43,26 @@ const List = styled(Box).attrs({
 `;
 
 export type FilesUploaderProps = BoxProps & {
+  slug: string;
   files: File[];
   onUpload(params: { url: string; file: File }): void;
 };
 
 export const FilesUploader: React.FC<FilesUploaderProps> = ({
+  slug,
   files,
   onUpload,
   ...rest
 }) => {
-  const fileTypes = files.map(
-    (file) =>
-      SUPPORTED_UPLOAD_TYPES[
-        file.type as keyof typeof SUPPORTED_UPLOAD_TYPES
-      ] as SupportedUpload
-  );
+  const uploads: PresignedUrlAttributes[] = files.map((file) => ({
+    key: `images/${slug}`,
+    type: SUPPORTED_UPLOAD_TYPES[
+      file.type as keyof typeof SUPPORTED_UPLOAD_TYPES
+    ] as SupportedUpload,
+  }));
 
   const [{ data, error, fetching }] = useFilesUploaderQuery({
-    variables: { fileTypes },
+    variables: { uploads },
   });
 
   if (error) {
@@ -68,23 +71,22 @@ export const FilesUploader: React.FC<FilesUploaderProps> = ({
 
   if (fetching || !data) return null;
 
-  const uploads: [string, File][] = data.presigned_upload_urls.map((url, i) => [
-    url,
-    files[i],
-  ]);
-
   return (
     <Container {...rest}>
       <List>
         <Stack>
-          {uploads.map(([presignedUploadUrl, file], i) => (
-            <FileUpload
-              key={file.name + i}
-              file={file}
-              presignedUploadUrl={presignedUploadUrl}
-              onUpload={onUpload}
-            />
-          ))}
+          {data.presigned_upload_urls.map((presignedUploadUrl, i) => {
+            const file = files[i];
+
+            return (
+              <FileUpload
+                key={file.name + i}
+                file={file}
+                presignedUploadUrl={presignedUploadUrl}
+                onUpload={onUpload}
+              />
+            );
+          })}
         </Stack>
       </List>
     </Container>

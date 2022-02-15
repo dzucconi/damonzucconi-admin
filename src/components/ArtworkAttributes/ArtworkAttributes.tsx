@@ -33,22 +33,20 @@ export const ARTWORK_ATTRIBUTES_FRAGMENT = gql`
 type ArtworkAttributesProps = {
   defaults?: ArtworkAttributesFragment;
   label?: string;
-  onChange?(attributes: Attributes): void;
   onSubmit(attributes: Attributes): void;
 };
 
 export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
   label = "add",
   defaults,
-  onChange,
   onSubmit,
 }) => {
   const { register, handleSubmit, getValues, setValue } = useForm<Attributes>({
     defaultValues: {
+      state: defaults?.state ?? State.Draft,
       title: defaults?.title ?? "",
       year: defaults?.year ?? new Date().getFullYear(),
       material: defaults?.material,
-      state: defaults?.state ?? State.Draft,
       width: defaults?.dimensions?.inches?.width,
       height: defaults?.dimensions?.inches?.height,
       depth: defaults?.dimensions?.inches?.depth,

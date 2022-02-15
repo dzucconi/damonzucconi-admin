@@ -37,12 +37,14 @@ const Upload = styled.label.attrs({
 type FileUploadButtonProps = {
   onUpload(url: string): Promise<any>;
   onComplete?(): void;
+  slug: string;
 };
 
 export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
   children,
   onUpload,
   onComplete,
+  slug,
   ...rest
 }) => {
   const { sendNotification, sendError } = useAlerts();
@@ -101,7 +103,11 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
       {uploadingFiles.length > 0 && (
         <Modal overlay zIndex={100}>
-          <FilesUploader files={acceptedFiles} onUpload={handleUpload} />
+          <FilesUploader
+            slug={slug}
+            files={acceptedFiles}
+            onUpload={handleUpload}
+          />
         </Modal>
       )}
     </>
