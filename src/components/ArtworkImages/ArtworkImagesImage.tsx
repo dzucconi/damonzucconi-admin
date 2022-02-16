@@ -42,7 +42,7 @@ gql`
     height
     title
     description
-    thumbnail: resized(width: 250, height: 200) {
+    thumbnail: resized(width: 250, height: 250) {
       height
       width
       urls {
@@ -82,7 +82,7 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
   const { register, handleSubmit } = useForm<UpdateImageAttributes>({
     defaultValues: {
       title: image.title,
-      // description: image.description, // TODO: Add description
+      description: image.description,
     },
   });
 
@@ -131,12 +131,9 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
                 />
               </Cell>
 
-              <Cell>
-                {image.width}×{image.height}
-              </Cell>
-
               <Input placeholder="Title" {...register("title")} />
-              <Input placeholder="Description" />
+
+              <Input placeholder="Description" {...register("description")} />
 
               <Stack direction="horizontal">
                 <Button
@@ -163,12 +160,18 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
         </Modal>
       )}
 
-      <File onClick={handleClick}>
+      {console.log(image.thumbnail)}
+
+      <File
+        onClick={handleClick}
+        name={image.title ?? ""}
+        meta={image.description ?? `${image.width}×${image.height}`}
+      >
         <ResponsiveImage
           srcs={[image.thumbnail.urls._1x, image.thumbnail.urls._2x]}
           aspectWidth={image.thumbnail.width}
           aspectHeight={image.thumbnail.height}
-          maxWidth={image.thumbnail.height}
+          maxWidth={image.thumbnail.width}
           maxHeight={image.thumbnail.height}
           backgroundColor="tertiary"
         />

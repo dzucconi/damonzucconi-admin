@@ -337,6 +337,7 @@ export type ImageResizedArgs = {
 };
 
 export type ImageAttributes = {
+  description?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
   largestSideDisplaySize?: InputMaybe<Scalars['Int']>;
   state?: InputMaybe<State>;
@@ -607,6 +608,7 @@ export type UpdateEmbedAttributes = {
 };
 
 export type UpdateImageAttributes = {
+  description?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
   largestSideDisplaySize?: InputMaybe<Scalars['Int']>;
   state?: InputMaybe<State>;
@@ -717,7 +719,7 @@ export const ArtworkImagesImage_ImageFragmentDoc = gql`
   height
   title
   description
-  thumbnail: resized(width: 250, height: 200) {
+  thumbnail: resized(width: 250, height: 250) {
     height
     width
     urls {
