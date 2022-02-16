@@ -160,8 +160,6 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
         </Modal>
       )}
 
-      {console.log(image.thumbnail)}
-
       <File
         onClick={handleClick}
         name={image.title ?? ""}

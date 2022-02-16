@@ -25,7 +25,7 @@ export const ArtworkEmbeds: React.FC<ArtworkEmbedsProps> = ({
     <Stack {...rest}>
       <Button>
         <Plus size={4} strokeWidth="1px" mr={3} />
-        embed
+        Embed
       </Button>
 
       {artwork.embeds.map((embed) => {

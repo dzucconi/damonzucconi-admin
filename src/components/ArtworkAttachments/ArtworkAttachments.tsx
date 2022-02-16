@@ -26,7 +26,7 @@ export const ArtworkAttachments: React.FC<ArtworkAttachmentsProps> = ({
     <Stack {...rest}>
       <Button>
         <Plus size={4} strokeWidth="1px" mr={3} />
-        attachment
+        Attachment
       </Button>
 
       {artwork.attachments.map((attachment) => {

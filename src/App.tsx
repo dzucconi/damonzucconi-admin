@@ -59,15 +59,15 @@ const App = () => {
                 >
                   <Button as={Link} flex={1} to="/artwork/new">
                     <Plus size={4} strokeWidth="1px" mr={3} />
-                    artwork
+                    Artwork
                   </Button>
 
                   <Button as={Link} flex={1} to="/artworks">
-                    artworks
+                    Artworks
                   </Button>
 
                   <Button as={Link} flex={1} to="/exhibitions">
-                    exhibitions
+                    Exhibitions
                   </Button>
                 </Stack>
 

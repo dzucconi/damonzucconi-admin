@@ -28,7 +28,7 @@ export const ArtworkEditions: React.FC<ArtworkEditionsProps> = ({
     <Stack {...rest}>
       <Button>
         <Plus size={4} strokeWidth="1px" mr={3} />
-        edition
+        Edition
       </Button>
 
       {artwork.editions.map((edition) => {

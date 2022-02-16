@@ -50,7 +50,7 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
         }}
       >
         <Plus size={4} strokeWidth="1px" mr={3} />
-        image
+        Image
       </FileUploadButton>
 
       <Grid my={6}>
