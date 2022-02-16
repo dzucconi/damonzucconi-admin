@@ -1,11 +1,12 @@
 import React from "react";
 import gql from "graphql-tag";
-import { Grid, Stack, Plus, ResponsiveImage } from "@auspices/eos";
+import { Stack, Plus, Cell, Image, Input, Button, Grid } from "@auspices/eos";
 import {
   ArtworkImagesFragment,
   useAddArtworkImageMutation,
 } from "../../generated/graphql";
 import { FileUploadButton } from "../FileUploadButton";
+import { ArtworkImagesImage } from "./ArtworkImagesImage";
 
 export const ARTWORK_IMAGES_FRAGMENT = gql`
   fragment ArtworkImagesFragment on Artwork {
@@ -13,14 +14,7 @@ export const ARTWORK_IMAGES_FRAGMENT = gql`
     slug
     images {
       id
-      thumbnail: resized(width: 256, height: 256) {
-        height
-        width
-        urls {
-          _1x
-          _2x
-        }
-      }
+      ...ArtworkImagesImage_image
     }
   }
 `;
@@ -58,20 +52,14 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
         image
       </FileUploadButton>
 
-      <Grid p={6}>
+      <Grid my={6}>
         {artwork.images.map((image) => {
           return (
-            image.thumbnail && (
-              <ResponsiveImage
-                key={image.id}
-                srcs={[image.thumbnail.urls._1x, image.thumbnail.urls._2x]}
-                aspectWidth={image.thumbnail.width}
-                aspectHeight={image.thumbnail.height}
-                maxWidth={image.thumbnail.width}
-                maxHeight={image.thumbnail.height}
-                backgroundColor="tertiary"
-              />
-            )
+            <ArtworkImagesImage
+              key={image.id}
+              artworkId={artwork.id}
+              image={image}
+            />
           );
         })}
       </Grid>
