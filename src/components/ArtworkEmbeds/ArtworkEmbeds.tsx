@@ -1,7 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Stack, Input, Pill, Button, Plus } from "@auspices/eos";
-import { ArtworkEmbedsFragment } from "../../generated/types/ArtworkEmbedsFragment";
+import { ArtworkEmbedsFragment } from "../../generated/graphql";
 
 export const ARTWORK_EMBEDS_FRAGMENT = gql`
   fragment ArtworkEmbedsFragment on Artwork {

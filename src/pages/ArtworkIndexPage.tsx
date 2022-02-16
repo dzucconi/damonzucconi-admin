@@ -1,10 +1,9 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Helmet } from "react-helmet";
-import { useQuery } from "@apollo/react-hooks";
 import { Button, Stack, Loading, Tag } from "@auspices/eos";
 import { Link } from "react-router-dom";
-import { ArtworkIndexPageQuery } from "../generated/types/ArtworkIndexPageQuery";
+import { useArtworkIndexPageQuery } from "../generated/graphql";
 
 export const ARTWORK_INDEX_PAGE_QUERY = gql`
   query ArtworkIndexPageQuery {
@@ -18,22 +17,20 @@ export const ARTWORK_INDEX_PAGE_QUERY = gql`
 `;
 
 const STATUS_COLORS = {
-  draft: "danger",
-  selected: "accent",
-  published: "secondary",
-  archived: "tertiary",
+  DRAFT: "danger",
+  SELECTED: "accent",
+  PUBLISHED: "secondary",
+  ARCHIVED: "tertiary",
 } as const;
 
 export const ArtworkIndexPage: React.FC = () => {
-  const { data, loading, error } = useQuery<ArtworkIndexPageQuery>(
-    ARTWORK_INDEX_PAGE_QUERY
-  );
+  const [{ data, fetching, error }] = useArtworkIndexPageQuery();
 
   if (error) {
     throw error;
   }
 
-  if (loading || !data) {
+  if (fetching || !data) {
     return <Loading />;
   }
 
@@ -57,10 +54,7 @@ export const ArtworkIndexPage: React.FC = () => {
             >
               {artwork.title}
 
-              <Tag
-                ml={4}
-                bg={STATUS_COLORS[artwork.state as keyof typeof STATUS_COLORS]}
-              >
+              <Tag ml={4} bg={STATUS_COLORS[artwork.state]}>
                 {artwork.state}
               </Tag>
             </Button>

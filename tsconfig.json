@@ -16,6 +16,5 @@
     "jsx": "react",
     "downlevelIteration": true
   },
-  "include": ["src"],
-  "exclude": ["src/generated/types/globalTypes.ts"]
+  "include": ["src"]
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Upload } from "@auspices/eos";
 import { uploadFile } from "../../lib/uploadFile";
 
@@ -22,7 +22,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     [file, onUpload]
   );
 
+  const run = useRef(false);
+
   useEffect(() => {
+    if (run.current) return;
+
+    run.current = true;
+
     uploadFile({
       presignedUploadUrl,
       file,

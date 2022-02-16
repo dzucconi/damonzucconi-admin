@@ -37,12 +37,14 @@ const Upload = styled.label.attrs({
 type FileUploadButtonProps = {
   onUpload(url: string): Promise<any>;
   onComplete?(): void;
+  slug: string;
 };
 
 export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
   children,
   onUpload,
   onComplete,
+  slug,
   ...rest
 }) => {
   const { sendNotification, sendError } = useAlerts();
@@ -52,8 +54,8 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setAcceptedFiles([...event.target.files]);
-      setUploadingFIles([...event.target.files]);
+      setAcceptedFiles([...(event.target.files ?? [])]);
+      setUploadingFIles([...(event.target.files ?? [])]);
     },
     []
   );
@@ -63,7 +65,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
       try {
         onUpload(url);
       } catch (err) {
-        sendError({ body: err.message });
+        sendError({ body: (err as Error).message });
       }
 
       const filename = file.name.substring(
@@ -101,7 +103,11 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
       {uploadingFiles.length > 0 && (
         <Modal overlay zIndex={100}>
-          <FilesUploader files={acceptedFiles} onUpload={handleUpload} />
+          <FilesUploader
+            slug={slug}
+            files={acceptedFiles}
+            onUpload={handleUpload}
+          />
         </Modal>
       )}
     </>

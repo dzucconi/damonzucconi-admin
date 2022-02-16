@@ -1,18 +1,17 @@
 import React from "react";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
 import styled from "styled-components";
 import { Box, BoxProps, Stack } from "@auspices/eos";
 import { FileUpload } from "../../components/FileUpload";
 import {
-  FilesUploaderQuery,
-  FilesUploaderQueryVariables,
-} from "../../generated/types/FilesUploaderQuery";
-import { SupportedUpload } from "../../generated/types/globalTypes";
+  useFilesUploaderQuery,
+  SupportedUpload,
+  PresignedUrlAttributes,
+} from "../../generated/graphql";
 
 export const FILES_UPLOADER_QUERY = gql`
-  query FilesUploaderQuery($fileTypes: [SupportedUpload!]!) {
-    presigned_upload_urls(types: $fileTypes)
+  query FilesUploaderQuery($uploads: [PresignedUrlAttributes!]!) {
+    presigned_upload_urls(uploads: $uploads)
   }
 `;
 
@@ -44,52 +43,50 @@ const List = styled(Box).attrs({
 `;
 
 export type FilesUploaderProps = BoxProps & {
+  slug: string;
   files: File[];
   onUpload(params: { url: string; file: File }): void;
 };
 
 export const FilesUploader: React.FC<FilesUploaderProps> = ({
+  slug,
   files,
   onUpload,
   ...rest
 }) => {
-  const fileTypes = files.map(
-    (file) =>
-      SUPPORTED_UPLOAD_TYPES[
-        file.type as keyof typeof SUPPORTED_UPLOAD_TYPES
-      ] as SupportedUpload
-  );
+  const uploads: PresignedUrlAttributes[] = files.map((file) => ({
+    key: `images/${slug}`,
+    type: SUPPORTED_UPLOAD_TYPES[
+      file.type as keyof typeof SUPPORTED_UPLOAD_TYPES
+    ] as SupportedUpload,
+  }));
 
-  const { data, error, loading } = useQuery<
-    FilesUploaderQuery,
-    FilesUploaderQueryVariables
-  >(FILES_UPLOADER_QUERY, {
-    variables: { fileTypes },
+  const [{ data, error, fetching }] = useFilesUploaderQuery({
+    variables: { uploads },
   });
 
   if (error) {
     throw error;
   }
 
-  if (loading || !data) return null;
-
-  const uploads: [string, File][] = data.presigned_upload_urls.map((url, i) => [
-    url,
-    files[i],
-  ]);
+  if (fetching || !data) return null;
 
   return (
     <Container {...rest}>
       <List>
         <Stack>
-          {uploads.map(([presignedUploadUrl, file], i) => (
-            <FileUpload
-              key={file.name + i}
-              file={file}
-              presignedUploadUrl={presignedUploadUrl}
-              onUpload={onUpload}
-            />
-          ))}
+          {data.presigned_upload_urls.map((presignedUploadUrl, i) => {
+            const file = files[i];
+
+            return (
+              <FileUpload
+                key={file.name + i}
+                file={file}
+                presignedUploadUrl={presignedUploadUrl}
+                onUpload={onUpload}
+              />
+            );
+          })}
         </Stack>
       </List>
     </Container>

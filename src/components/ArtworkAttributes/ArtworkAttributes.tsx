@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Input, Stack, Pill, Field, Button, Select } from "@auspices/eos";
 import gql from "graphql-tag";
-import { ArtworkAttributesFragment } from "../../generated/types/ArtworkAttributesFragment";
-
-const DEFAULT_VALUES = {
-  year: new Date().getFullYear(),
-  state: "DRAFT",
-};
+import {
+  ArtworkAttributesFragment,
+  ArtworkAttributes as Attributes,
+  State,
+} from "../../generated/graphql";
+import { useForm } from "react-hook-form";
 
 export const ARTWORK_ATTRIBUTES_FRAGMENT = gql`
   fragment ArtworkAttributesFragment on Artwork {
@@ -30,61 +30,35 @@ export const ARTWORK_ATTRIBUTES_FRAGMENT = gql`
   }
 `;
 
-export type Attributes = {
-  year: number;
-  state: string;
-  title?: string;
-} & Record<string, string | number | boolean>;
-
 type ArtworkAttributesProps = {
   defaults?: ArtworkAttributesFragment;
   label?: string;
-  onChange?(attributes: Attributes): void;
   onSubmit(attributes: Attributes): void;
 };
 
 export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
   label = "add",
-  defaults = {} as ArtworkAttributesFragment,
-  onChange,
+  defaults,
   onSubmit,
 }) => {
-  const [attributes, setAttributes] = useState<Attributes>({
-    state: defaults.state?.toUpperCase() ?? DEFAULT_VALUES.state,
-    year: defaults.year ?? DEFAULT_VALUES.year,
+  const { register, handleSubmit, getValues, setValue } = useForm<Attributes>({
+    defaultValues: {
+      state: defaults?.state ?? State.Draft,
+      title: defaults?.title ?? "",
+      year: defaults?.year ?? new Date().getFullYear(),
+      material: defaults?.material,
+      width: defaults?.dimensions?.inches?.width,
+      height: defaults?.dimensions?.inches?.height,
+      depth: defaults?.dimensions?.inches?.depth,
+      unit: defaults?.dimensions?.inches?.unit,
+      duration: defaults?.duration,
+      gloss: defaults?.gloss,
+      description: defaults?.description,
+    },
   });
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = event.currentTarget;
-
-    switch (type) {
-      case "number":
-        setAttributes((prevAttributes) => ({
-          ...prevAttributes,
-          [name]: parseFloat(value),
-        }));
-        break;
-      default:
-        setAttributes((prevAttributes) => ({
-          ...prevAttributes,
-          [name]: value,
-        }));
-    }
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    return onSubmit(attributes);
-  };
-
-  useEffect(() => {
-    onChange && onChange(attributes);
-  }, [attributes, onChange]);
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Stack width="100%">
         <Select
           label="state"
@@ -94,26 +68,17 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
             { value: "SELECTED", label: "selected" },
             { value: "ARCHIVED", label: "archived" },
           ]}
-          value={attributes.state}
-          onChange={(value) => {
-            handleChange({
-              currentTarget: {
-                name: "state",
-                value: `${value}`,
-                type: "string",
-              },
-            } as any);
+          value={getValues().state}
+          onChange={(value: State) => {
+            setValue("state", value);
           }}
         />
 
         <Field
           label="title"
           input={{
-            name: "title",
             placeholder: "required",
-            required: true,
-            onChange: handleChange,
-            defaultValue: defaults.title as string,
+            ...register("title", { required: true }),
           }}
         />
 
@@ -121,21 +86,16 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
           label="year"
           input={{
             type: "number",
-            name: "year",
             placeholder: "required",
-            required: true,
-            onChange: handleChange,
-            defaultValue: defaults.year,
+            ...register("year", { required: true, valueAsNumber: true }),
           }}
         />
 
         <Field
           label="material"
           input={{
-            name: "material",
             placeholder: "optional",
-            onChange: handleChange,
-            defaultValue: defaults.material as string,
+            ...register("material"),
           }}
         />
 
@@ -147,44 +107,34 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
               type="number"
               step="0.01"
               placeholder="width"
-              name="width"
-              onChange={handleChange}
-              defaultValue={defaults.dimensions?.inches?.width as number}
+              {...register("width", { valueAsNumber: true })}
             />
+
             <Input
               flex={1}
               type="number"
               step="0.01"
               placeholder="height"
-              name="height"
-              onChange={handleChange}
-              defaultValue={defaults.dimensions?.inches?.height as number}
+              {...register("height", { valueAsNumber: true })}
             />
+
             <Input
               flex={1}
               type="number"
               step="0.01"
               placeholder="depth"
-              name="depth"
-              onChange={handleChange}
-              defaultValue={defaults.dimensions?.inches?.depth as number}
+              {...register("depth", { valueAsNumber: true })}
             />
-            <Input
-              placeholder="unit"
-              name="unit"
-              onChange={handleChange}
-              defaultValue={defaults.dimensions?.inches?.unit as string}
-            />
+
+            <Input placeholder="unit" {...register("unit")} />
           </Stack>
         </Stack>
 
         <Field
           label="duration"
           input={{
-            name: "duration",
             placeholder: "00:00:00",
-            onChange: handleChange,
-            defaultValue: defaults.duration as string,
+            ...register("duration"),
           }}
         />
 
@@ -192,18 +142,14 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
         <Input
           as="textarea"
           placeholder="A brief explanation; marginal"
-          name="gloss"
-          onChange={handleChange}
-          defaultValue={defaults.gloss as string}
+          {...register("gloss")}
         />
 
         <Pill>description</Pill>
         <Input
           as="textarea"
           placeholder="A longer contextual text"
-          name="description"
-          onChange={handleChange}
-          defaultValue={defaults.description as string}
+          {...register("description")}
         />
 
         <Button type="submit">{label}</Button>

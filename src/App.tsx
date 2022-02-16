@@ -1,6 +1,5 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { ApolloProvider } from "@apollo/react-hooks";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import {
@@ -14,7 +13,6 @@ import {
   ThemerProvider,
   useThemer,
 } from "@auspices/eos";
-import { initClient } from "./apollo/initClient";
 import {
   ArtworkIndexPage,
   ArtworkShowPage,
@@ -22,8 +20,7 @@ import {
   LoginPage,
 } from "./pages";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-
-const client = initClient();
+import { UrqlProvider } from "./lib/urql";
 
 const App = () => {
   const { theme } = useThemer();
@@ -99,7 +96,7 @@ const App = () => {
 export default () => {
   return (
     <BrowserRouter>
-      <ApolloProvider client={client}>
+      <UrqlProvider>
         <ThemerProvider>
           <Helmet
             defaultTitle="Loading / Damon Zucconi"
@@ -108,7 +105,7 @@ export default () => {
 
           <App />
         </ThemerProvider>
-      </ApolloProvider>
+      </UrqlProvider>
     </BrowserRouter>
   );
 };
