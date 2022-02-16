@@ -38,6 +38,7 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
   artwork,
   ...rest
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, addArtworkImage] = useAddArtworkImageMutation();
 
   return (
