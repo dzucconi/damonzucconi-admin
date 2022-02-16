@@ -37,7 +37,7 @@ type ArtworkAttributesProps = {
 };
 
 export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
-  label = "add",
+  label = "Add",
   defaults,
   onSubmit,
 }) => {
@@ -61,13 +61,11 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack width="100%">
         <Select
-          label="state"
-          options={[
-            { value: "DRAFT", label: "draft" },
-            { value: "PUBLISHED", label: "published" },
-            { value: "SELECTED", label: "selected" },
-            { value: "ARCHIVED", label: "archived" },
-          ]}
+          label="State"
+          options={Object.entries(State).map(([label, value]) => ({
+            label,
+            value,
+          }))}
           value={getValues().state}
           onChange={(value: State) => {
             setValue("state", value);
@@ -75,38 +73,38 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
         />
 
         <Field
-          label="title"
+          label="Title"
           input={{
-            placeholder: "required",
+            placeholder: "Required",
             ...register("title", { required: true }),
           }}
         />
 
         <Field
-          label="year"
+          label="Year"
           input={{
             type: "number",
-            placeholder: "required",
+            placeholder: "Required",
             ...register("year", { required: true, valueAsNumber: true }),
           }}
         />
 
         <Field
-          label="material"
+          label="Material"
           input={{
-            placeholder: "optional",
+            placeholder: "Optional",
             ...register("material"),
           }}
         />
 
         <Stack>
-          <Pill>dimensions</Pill>
+          <Pill>Dimensions</Pill>
           <Stack direction={["vertical", "vertical", "vertical", "horizontal"]}>
             <Input
               flex={1}
               type="number"
               step="0.01"
-              placeholder="width"
+              placeholder="Width"
               {...register("width", { valueAsNumber: true })}
             />
 
@@ -114,7 +112,7 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
               flex={1}
               type="number"
               step="0.01"
-              placeholder="height"
+              placeholder="Height"
               {...register("height", { valueAsNumber: true })}
             />
 
@@ -122,30 +120,30 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
               flex={1}
               type="number"
               step="0.01"
-              placeholder="depth"
+              placeholder="Depth"
               {...register("depth", { valueAsNumber: true })}
             />
 
-            <Input placeholder="unit" {...register("unit")} />
+            <Input placeholder="Unit" {...register("unit")} />
           </Stack>
         </Stack>
 
         <Field
-          label="duration"
+          label="Duration"
           input={{
             placeholder: "00:00:00",
             ...register("duration"),
           }}
         />
 
-        <Pill>gloss</Pill>
+        <Pill>Gloss</Pill>
         <Input
           as="textarea"
           placeholder="A brief explanation; marginal"
           {...register("gloss")}
         />
 
-        <Pill>description</Pill>
+        <Pill>Description</Pill>
         <Input
           as="textarea"
           placeholder="A longer contextual text"

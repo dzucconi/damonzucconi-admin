@@ -66,10 +66,10 @@ export const ArtworkNewPage: React.FC = () => {
         onSubmit={handleSubmit}
         label={
           {
-            [Mode.Resting]: "add",
-            [Mode.Saving]: "adding",
-            [Mode.Error]: "error",
-            [Mode.Saved]: "added",
+            [Mode.Resting]: "Add",
+            [Mode.Saving]: "Adding",
+            [Mode.Error]: "Error",
+            [Mode.Saved]: "Added",
           }[mode]
         }
       />

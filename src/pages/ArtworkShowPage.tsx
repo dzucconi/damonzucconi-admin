@@ -164,23 +164,18 @@ export const ArtworkShowPage: React.FC = () => {
           <ArtworkAttributes
             defaults={artwork}
             onSubmit={handleSubmit}
-            label="update"
+            label="Update"
           />
         </Stack>
 
-        <Pill>images</Pill>
         <ArtworkImages artwork={artwork} />
 
-        <Pill>links</Pill>
         <ArtworkLinks artwork={artwork} />
 
-        <Pill>editions</Pill>
         <ArtworkEditions artwork={artwork} />
 
-        <Pill>embeds</Pill>
         <ArtworkEmbeds artwork={artwork} />
 
-        <Pill>attachments</Pill>
         <ArtworkAttachments artwork={artwork} />
       </Stack>
     </>
