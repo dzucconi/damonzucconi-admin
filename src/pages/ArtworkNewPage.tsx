@@ -34,7 +34,8 @@ export const ArtworkNewPage: React.FC = () => {
 
   const [mode, setMode] = useState(Mode.Resting);
 
-  const [_addArtworkResult, addArtwork] = useAddArtworkMutation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, addArtwork] = useAddArtworkMutation();
 
   const handleSubmit = async (attributes: TArtworkAttributes) => {
     setMode(Mode.Saving);

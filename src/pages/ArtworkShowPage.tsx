@@ -96,6 +96,7 @@ export const ArtworkShowPage: React.FC = () => {
     variables: { id },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, updateArtwork] = useArtworkShowPageUpdateMutation();
 
   const handleSubmit = async (attributes: Attributes) => {

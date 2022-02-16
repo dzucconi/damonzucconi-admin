@@ -86,6 +86,7 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, updateImage] = useUpdateImageMutation();
 
   const { sendNotification, sendError } = useAlerts();

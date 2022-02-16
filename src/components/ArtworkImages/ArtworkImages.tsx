@@ -1,6 +1,6 @@
 import React from "react";
 import gql from "graphql-tag";
-import { Stack, Plus, Cell, Image, Input, Button, Grid } from "@auspices/eos";
+import { Stack, Plus, Grid } from "@auspices/eos";
 import {
   ArtworkImagesFragment,
   useAddArtworkImageMutation,
