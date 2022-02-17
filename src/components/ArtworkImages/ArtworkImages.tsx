@@ -53,17 +53,19 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
         Image
       </FileUploadButton>
 
-      <Grid my={6}>
-        {artwork.images.map((image) => {
-          return (
-            <ArtworkImagesImage
-              key={image.id}
-              artworkId={artwork.id}
-              image={image}
-            />
-          );
-        })}
-      </Grid>
+      {artwork.images.length > 0 && (
+        <Grid my={6}>
+          {artwork.images.map((image) => {
+            return (
+              <ArtworkImagesImage
+                key={image.id}
+                artworkId={artwork.id}
+                image={image}
+              />
+            );
+          })}
+        </Grid>
+      )}
     </Stack>
   );
 };

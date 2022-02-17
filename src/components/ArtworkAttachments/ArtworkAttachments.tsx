@@ -58,17 +58,19 @@ export const ArtworkAttachments: React.FC<ArtworkAttachmentsProps> = ({
         Attachment
       </FileUploadButton>
 
-      <Grid my={6}>
-        {artwork.attachments.map((attachment) => {
-          return (
-            <ArtworkAttachmentsAttachment
-              key={attachment.id}
-              artworkId={artwork.id}
-              attachment={attachment}
-            />
-          );
-        })}
-      </Grid>
+      {artwork.attachments.length > 0 && (
+        <Grid my={6}>
+          {artwork.attachments.map((attachment) => {
+            return (
+              <ArtworkAttachmentsAttachment
+                key={attachment.id}
+                artworkId={artwork.id}
+                attachment={attachment}
+              />
+            );
+          })}
+        </Grid>
+      )}
     </Stack>
   );
 };
