@@ -1,15 +1,36 @@
 import React from "react";
 import gql from "graphql-tag";
-import { Button, Stack, Plus, Input } from "@auspices/eos";
-import { ArtworkAttachmentsFragment } from "../../generated/graphql";
+import { Stack, Plus, Grid } from "@auspices/eos";
+import {
+  ArtworkAttachmentsFragment,
+  useAddArtworkAttachmentMutation,
+} from "../../generated/graphql";
+import { FileUploadButton } from "../FileUploadButton";
+import { ArtworkAttachmentsAttachment } from "./ArtworkAttachmentsAttachment";
 
-export const ARTWORK_ATTACHMENTS_FRAGMENT = gql`
+gql`
   fragment ArtworkAttachmentsFragment on Artwork {
+    id
+    slug
     attachments {
       id
-      title
-      url
-      state
+      ...ArtworkAttachmentsAttachment_attachment
+    }
+  }
+`;
+
+gql`
+  mutation AddArtworkAttachmentMutation(
+    $id: ID!
+    $attachment: AttachmentAttributes!
+  ) {
+    add_artwork_entity(
+      input: { id: $id, entity: { attachment: $attachment } }
+    ) {
+      artwork {
+        id
+        ...ArtworkAttachmentsFragment
+      }
     }
   }
 `;
@@ -22,28 +43,32 @@ export const ArtworkAttachments: React.FC<ArtworkAttachmentsProps> = ({
   artwork,
   ...rest
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, addArtworkAttachment] = useAddArtworkAttachmentMutation();
+
   return (
     <Stack {...rest}>
-      <Button>
+      <FileUploadButton
+        slug={artwork.slug}
+        onUpload={(url) => {
+          return addArtworkAttachment({ id: artwork.id, attachment: { url } });
+        }}
+      >
         <Plus size={4} strokeWidth="1px" mr={3} />
         Attachment
-      </Button>
+      </FileUploadButton>
 
-      {artwork.attachments.map((attachment) => {
-        return (
-          <Stack key={attachment.id} direction="horizontal">
-            <Input value={attachment.state} />
-
-            <Input
-              defaultValue={attachment.title || ""}
-              placeholder="title"
-              flex={1}
+      <Grid my={6}>
+        {artwork.attachments.map((attachment) => {
+          return (
+            <ArtworkAttachmentsAttachment
+              key={attachment.id}
+              artworkId={artwork.id}
+              attachment={attachment}
             />
-
-            <Input value={attachment.url} disabled readOnly flex={1} />
-          </Stack>
-        );
-      })}
+          );
+        })}
+      </Grid>
     </Stack>
   );
 };

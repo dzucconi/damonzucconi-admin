@@ -8,7 +8,7 @@ import {
 import { FileUploadButton } from "../FileUploadButton";
 import { ArtworkImagesImage } from "./ArtworkImagesImage";
 
-export const ARTWORK_IMAGES_FRAGMENT = gql`
+gql`
   fragment ArtworkImagesFragment on Artwork {
     id
     slug
