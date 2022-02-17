@@ -1,4 +1,4 @@
-import { Button, Modal, Tag, Truncate } from "@auspices/eos";
+import { Button, Modal, Truncate } from "@auspices/eos";
 import React, { useState } from "react";
 import { gql } from "urql";
 import { ArtworkEmbedsEmbed_EmbedFragment } from "../../generated/graphql";
