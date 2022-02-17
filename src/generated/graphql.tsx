@@ -657,6 +657,14 @@ export type UpdateEmbedMutationVariables = Exact<{
 
 export type UpdateEmbedMutation = { __typename?: 'Mutation', update_artwork_entity?: { __typename?: 'UpdateArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }> } } | null };
 
+export type RemoveEmbedMutationVariables = Exact<{
+  artworkId: Scalars['ID'];
+  embedId: Scalars['ID'];
+}>;
+
+
+export type RemoveEmbedMutation = { __typename?: 'Mutation', remove_artwork_entity?: { __typename?: 'RemoveArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }> } } | null };
+
 export type ArtworkEmbedsEmbedForm_EmbedFragment = { __typename?: 'Embed', id: string, html?: string | null };
 
 export type ArtworkImagesFragment = { __typename?: 'Artwork', id: string, slug: string, images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> };
@@ -700,6 +708,14 @@ export type UpdateLinkMutationVariables = Exact<{
 
 
 export type UpdateLinkMutation = { __typename?: 'Mutation', update_artwork_entity?: { __typename?: 'UpdateArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, links: Array<{ __typename?: 'Link', id: string, title?: string | null, url: string, state: State, kind: Kind }> } } | null };
+
+export type RemoveLinkMutationVariables = Exact<{
+  artworkId: Scalars['ID'];
+  linkId: Scalars['ID'];
+}>;
+
+
+export type RemoveLinkMutation = { __typename?: 'Mutation', remove_artwork_entity?: { __typename?: 'RemoveArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, links: Array<{ __typename?: 'Link', id: string, title?: string | null, url: string, state: State, kind: Kind }> } } | null };
 
 export type ArtworkLinksLinkForm_LinkFragment = { __typename?: 'Link', id: string, state: State, kind: Kind, url: string, title?: string | null };
 
@@ -912,6 +928,21 @@ export const UpdateEmbedDocument = gql`
 export function useUpdateEmbedMutation() {
   return Urql.useMutation<UpdateEmbedMutation, UpdateEmbedMutationVariables>(UpdateEmbedDocument);
 };
+export const RemoveEmbedDocument = gql`
+    mutation RemoveEmbed($artworkId: ID!, $embedId: ID!) {
+  remove_artwork_entity(
+    input: {id: $artworkId, entity: {id: $embedId, type: EMBED}}
+  ) {
+    artwork {
+      ...ArtworkEmbedsFragment
+    }
+  }
+}
+    ${ArtworkEmbedsFragmentDoc}`;
+
+export function useRemoveEmbedMutation() {
+  return Urql.useMutation<RemoveEmbedMutation, RemoveEmbedMutationVariables>(RemoveEmbedDocument);
+};
 export const AddArtworkImageMutationDocument = gql`
     mutation AddArtworkImageMutation($id: ID!, $image: ImageAttributes!) {
   add_artwork_entity(input: {id: $id, entity: {image: $image}}) {
@@ -970,6 +1001,21 @@ export const UpdateLinkDocument = gql`
 
 export function useUpdateLinkMutation() {
   return Urql.useMutation<UpdateLinkMutation, UpdateLinkMutationVariables>(UpdateLinkDocument);
+};
+export const RemoveLinkDocument = gql`
+    mutation RemoveLink($artworkId: ID!, $linkId: ID!) {
+  remove_artwork_entity(
+    input: {id: $artworkId, entity: {id: $linkId, type: LINK}}
+  ) {
+    artwork {
+      ...ArtworkLinksFragment
+    }
+  }
+}
+    ${ArtworkLinksFragmentDoc}`;
+
+export function useRemoveLinkMutation() {
+  return Urql.useMutation<RemoveLinkMutation, RemoveLinkMutationVariables>(RemoveLinkDocument);
 };
 export const FilesUploaderQueryDocument = gql`
     query FilesUploaderQuery($uploads: [PresignedUrlAttributes!]!) {

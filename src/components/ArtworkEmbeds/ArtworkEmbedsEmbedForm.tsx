@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { gql } from "urql";
 import {
   EmbedAttributes,
-  useAddEmbedMutation,
   ArtworkEmbedsEmbedForm_EmbedFragment,
+  useAddEmbedMutation,
   useUpdateEmbedMutation,
+  useRemoveEmbedMutation,
 } from "../../generated/graphql";
 
 gql`
@@ -38,6 +39,18 @@ gql`
 `;
 
 gql`
+  mutation RemoveEmbed($artworkId: ID!, $embedId: ID!) {
+    remove_artwork_entity(
+      input: { id: $artworkId, entity: { id: $embedId, type: EMBED } }
+    ) {
+      artwork {
+        ...ArtworkEmbedsFragment
+      }
+    }
+  }
+`;
+
+gql`
   fragment ArtworkEmbedsEmbedForm_embed on Embed {
     id
     html
@@ -60,9 +73,11 @@ export const ArtworkEmbedsEmbedForm: React.FC<ArtworkEmbedsEmbedFormProps> = ({
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, addEmbed] = useAddEmbedMutation();
+  const [_a, addEmbed] = useAddEmbedMutation();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [__, updateEmbed] = useUpdateEmbedMutation();
+  const [_b, updateEmbed] = useUpdateEmbedMutation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_c, removeEmbed] = useRemoveEmbedMutation();
 
   const { sendError, sendNotification } = useAlerts();
 
@@ -91,12 +106,41 @@ export const ArtworkEmbedsEmbedForm: React.FC<ArtworkEmbedsEmbedFormProps> = ({
     });
   };
 
+  const handleDelete = async () => {
+    if (!embed) return;
+
+    try {
+      sendNotification({ body: "Deleting..." });
+      await removeEmbed({ artworkId, embedId: embed.id });
+      sendNotification({ body: "Embed deleted" });
+      onDone();
+    } catch (err) {
+      console.log(err);
+      sendError({ body: (err as Error).message });
+    }
+  };
+
   return (
     <form onSubmit={handleSave()}>
       <Stack width={600} bg="background">
         <Input as="textarea" placeholder="HTML" {...register("html")} />
 
-        <Button type="submit">Save</Button>
+        <Stack direction="horizontal">
+          {embed && (
+            <Button
+              color="danger"
+              type="button"
+              onClick={handleDelete}
+              flex={1}
+            >
+              Delete
+            </Button>
+          )}
+
+          <Button type="submit" flex={1}>
+            Save
+          </Button>
+        </Stack>
       </Stack>
     </form>
   );

@@ -9,6 +9,7 @@ import {
   useAddLinkMutation,
   ArtworkLinksLinkForm_LinkFragment,
   useUpdateLinkMutation,
+  useRemoveLinkMutation,
 } from "../../generated/graphql";
 
 gql`
@@ -31,6 +32,18 @@ gql`
   ) {
     update_artwork_entity(
       input: { id: $artworkId, entity: { id: $linkId, link: $attributes } }
+    ) {
+      artwork {
+        ...ArtworkLinksFragment
+      }
+    }
+  }
+`;
+
+gql`
+  mutation RemoveLink($artworkId: ID!, $linkId: ID!) {
+    remove_artwork_entity(
+      input: { id: $artworkId, entity: { id: $linkId, type: LINK } }
     ) {
       artwork {
         ...ArtworkLinksFragment
@@ -71,9 +84,11 @@ export const ArtworkLinksLinkForm: React.FC<ArtworkLinksLinkFormProps> = ({
     });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, addLink] = useAddLinkMutation();
+  const [_a, addLink] = useAddLinkMutation();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [__, updateLink] = useUpdateLinkMutation();
+  const [_b, updateLink] = useUpdateLinkMutation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_c, removeLink] = useRemoveLinkMutation();
 
   const { sendError, sendNotification } = useAlerts();
 
@@ -96,6 +111,20 @@ export const ArtworkLinksLinkForm: React.FC<ArtworkLinksLinkFormProps> = ({
         sendError({ body: (err as Error).message });
       }
     });
+  };
+
+  const handleDelete = async () => {
+    if (!link) return;
+
+    try {
+      sendNotification({ body: "Deleting..." });
+      await removeLink({ artworkId, linkId: link.id });
+      sendNotification({ body: "Embed deleted" });
+      onDone();
+    } catch (err) {
+      console.log(err);
+      sendError({ body: (err as Error).message });
+    }
   };
 
   return (
@@ -135,7 +164,22 @@ export const ArtworkLinksLinkForm: React.FC<ArtworkLinksLinkFormProps> = ({
 
         <Input placeholder="URL" type="url" required {...register("url")} />
 
-        <Button type="submit">Save</Button>
+        <Stack direction="horizontal">
+          {link && (
+            <Button
+              color="danger"
+              type="button"
+              onClick={handleDelete}
+              flex={1}
+            >
+              Delete
+            </Button>
+          )}
+
+          <Button type="submit" flex={1}>
+            Save
+          </Button>
+        </Stack>
       </Stack>
     </form>
   );
