@@ -12,20 +12,12 @@ import {
 } from "@auspices/eos";
 import {
   ArtworkImages,
-  ARTWORK_IMAGES_FRAGMENT,
   ArtworkAttachments,
-  ARTWORK_ATTACHMENTS_FRAGMENT,
   ArtworkEditions,
-  ARTWORK_EDITIONS_FRAGMENT,
   ArtworkLinks,
-  ARTWORK_LINKS_FRAGMENT,
   ArtworkEmbeds,
-  ARTWORK_EMBEDS_FRAGMENT,
 } from "../components";
-import {
-  ArtworkAttributes,
-  ARTWORK_ATTRIBUTES_FRAGMENT,
-} from "../components/ArtworkAttributes";
+import { ArtworkAttributes } from "../components/ArtworkAttributes";
 import { useHistory } from "react-router-dom";
 import {
   ArtworkAttributes as Attributes,
@@ -54,12 +46,6 @@ export const ARTWORK_SHOW_PAGE_ARTWORK_FRAGMENT = gql`
     ...ArtworkAttachmentsFragment
     ...ArtworkEditionsFragment
   }
-  ${ARTWORK_ATTRIBUTES_FRAGMENT}
-  ${ARTWORK_IMAGES_FRAGMENT}
-  ${ARTWORK_LINKS_FRAGMENT}
-  ${ARTWORK_EMBEDS_FRAGMENT}
-  ${ARTWORK_ATTACHMENTS_FRAGMENT}
-  ${ARTWORK_EDITIONS_FRAGMENT}
 `;
 
 export const ARTWORK_SHOW_PAGE_QUERY = gql`
@@ -172,11 +158,11 @@ export const ArtworkShowPage: React.FC = () => {
 
         <ArtworkLinks artwork={artwork} />
 
-        <ArtworkEditions artwork={artwork} />
-
         <ArtworkEmbeds artwork={artwork} />
 
         <ArtworkAttachments artwork={artwork} />
+
+        <ArtworkEditions artwork={artwork} />
       </Stack>
     </>
   );

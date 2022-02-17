@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
-import { Stack, Input, Button, Plus, Modal } from "@auspices/eos";
+import { Stack, Button, Plus, Modal } from "@auspices/eos";
 import { ArtworkLinksFragment } from "../../generated/graphql";
 import { ArtworkLinksLinkForm } from "./ArtworkLinksLinkForm";
 import { ArtworkLinksLink } from "./ArtworkLinksLink";
 
-export const ARTWORK_LINKS_FRAGMENT = gql`
+gql`
   fragment ArtworkLinksFragment on Artwork {
     id
     links {

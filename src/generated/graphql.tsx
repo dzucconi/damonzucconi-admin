@@ -638,6 +638,27 @@ export type ArtworkEditionsFragment = { __typename?: 'Artwork', editions: Array<
 
 export type ArtworkEmbedsFragment = { __typename?: 'Artwork', id: string, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }> };
 
+export type ArtworkEmbedsEmbed_EmbedFragment = { __typename?: 'Embed', html?: string | null, id: string };
+
+export type AddEmbedMutationVariables = Exact<{
+  artworkId: Scalars['ID'];
+  attributes: EmbedAttributes;
+}>;
+
+
+export type AddEmbedMutation = { __typename?: 'Mutation', add_artwork_entity?: { __typename?: 'AddArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }> } } | null };
+
+export type UpdateEmbedMutationVariables = Exact<{
+  artworkId: Scalars['ID'];
+  embedId: Scalars['ID'];
+  attributes: UpdateEmbedAttributes;
+}>;
+
+
+export type UpdateEmbedMutation = { __typename?: 'Mutation', update_artwork_entity?: { __typename?: 'UpdateArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, embeds: Array<{ __typename?: 'Embed', id: string, html?: string | null }> } } | null };
+
+export type ArtworkEmbedsEmbedForm_EmbedFragment = { __typename?: 'Embed', id: string, html?: string | null };
+
 export type ArtworkImagesFragment = { __typename?: 'Artwork', id: string, slug: string, images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> };
 
 export type AddArtworkImageMutationVariables = Exact<{
@@ -793,15 +814,27 @@ export const ArtworkLinksFragmentDoc = gql`
   }
 }
     ${ArtworkLinksLink_LinkFragmentDoc}`;
+export const ArtworkEmbedsEmbedForm_EmbedFragmentDoc = gql`
+    fragment ArtworkEmbedsEmbedForm_embed on Embed {
+  id
+  html
+}
+    `;
+export const ArtworkEmbedsEmbed_EmbedFragmentDoc = gql`
+    fragment ArtworkEmbedsEmbed_embed on Embed {
+  ...ArtworkEmbedsEmbedForm_embed
+  html
+}
+    ${ArtworkEmbedsEmbedForm_EmbedFragmentDoc}`;
 export const ArtworkEmbedsFragmentDoc = gql`
     fragment ArtworkEmbedsFragment on Artwork {
   id
   embeds {
     id
-    html
+    ...ArtworkEmbedsEmbed_embed
   }
 }
-    `;
+    ${ArtworkEmbedsEmbed_EmbedFragmentDoc}`;
 export const ArtworkAttachmentsFragmentDoc = gql`
     fragment ArtworkAttachmentsFragment on Artwork {
   attachments {
@@ -851,6 +884,34 @@ ${ArtworkLinksFragmentDoc}
 ${ArtworkEmbedsFragmentDoc}
 ${ArtworkAttachmentsFragmentDoc}
 ${ArtworkEditionsFragmentDoc}`;
+export const AddEmbedDocument = gql`
+    mutation AddEmbed($artworkId: ID!, $attributes: EmbedAttributes!) {
+  add_artwork_entity(input: {id: $artworkId, entity: {embed: $attributes}}) {
+    artwork {
+      ...ArtworkEmbedsFragment
+    }
+  }
+}
+    ${ArtworkEmbedsFragmentDoc}`;
+
+export function useAddEmbedMutation() {
+  return Urql.useMutation<AddEmbedMutation, AddEmbedMutationVariables>(AddEmbedDocument);
+};
+export const UpdateEmbedDocument = gql`
+    mutation UpdateEmbed($artworkId: ID!, $embedId: ID!, $attributes: UpdateEmbedAttributes!) {
+  update_artwork_entity(
+    input: {id: $artworkId, entity: {id: $embedId, embed: $attributes}}
+  ) {
+    artwork {
+      ...ArtworkEmbedsFragment
+    }
+  }
+}
+    ${ArtworkEmbedsFragmentDoc}`;
+
+export function useUpdateEmbedMutation() {
+  return Urql.useMutation<UpdateEmbedMutation, UpdateEmbedMutationVariables>(UpdateEmbedDocument);
+};
 export const AddArtworkImageMutationDocument = gql`
     mutation AddArtworkImageMutation($id: ID!, $image: ImageAttributes!) {
   add_artwork_entity(input: {id: $id, entity: {image: $image}}) {

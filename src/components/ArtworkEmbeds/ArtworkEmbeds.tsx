@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import gql from "graphql-tag";
-import { Stack, Input, Pill, Button, Plus } from "@auspices/eos";
+import { Stack, Button, Plus, Modal } from "@auspices/eos";
 import { ArtworkEmbedsFragment } from "../../generated/graphql";
+import { ArtworkEmbedsEmbedForm } from "./ArtworkEmbedsEmbedForm";
+import { ArtworkEmbedsEmbed } from "./ArtworkEmbedsEmbed";
 
-export const ARTWORK_EMBEDS_FRAGMENT = gql`
+gql`
   fragment ArtworkEmbedsFragment on Artwork {
     id
     embeds {
       id
-      html
+      ...ArtworkEmbedsEmbed_embed
     }
   }
 `;
@@ -21,26 +23,38 @@ export const ArtworkEmbeds: React.FC<ArtworkEmbedsProps> = ({
   artwork,
   ...rest
 }) => {
-  return (
-    <Stack {...rest}>
-      <Button>
-        <Plus size={4} strokeWidth="1px" mr={3} />
-        Embed
-      </Button>
+  const [mode, setMode] = useState<"Pending" | "Open">("Pending");
 
-      {artwork.embeds.map((embed) => {
-        return (
-          <Stack key={embed.id}>
-            <Pill>html</Pill>
-            <Input
-              as="textarea"
-              defaultValue={embed.html || ""}
-              placeholder="html"
-              rows={6}
-            />
-          </Stack>
-        );
-      })}
-    </Stack>
+  const handleClick = () => {
+    setMode("Open");
+  };
+
+  const handleClose = () => {
+    setMode("Pending");
+  };
+
+  return (
+    <>
+      {mode === "Open" && (
+        <Modal zIndex={10} overlay onClose={handleClose}>
+          <ArtworkEmbedsEmbedForm artworkId={artwork.id} onDone={handleClose} />
+        </Modal>
+      )}
+
+      <Stack {...rest}>
+        <Button onClick={handleClick}>
+          <Plus size={4} strokeWidth="1px" mr={3} />
+          Embed
+        </Button>
+
+        {artwork.embeds.map((embed) => {
+          return (
+            <Stack key={embed.id} direction="horizontal">
+              <ArtworkEmbedsEmbed artworkId={artwork.id} embed={embed} />
+            </Stack>
+          );
+        })}
+      </Stack>
+    </>
   );
 };
