@@ -7,6 +7,10 @@ import {
   File,
   Modal,
   useAlerts,
+  useConfirm,
+  Box,
+  ContextMenu,
+  PaneOption,
 } from "@auspices/eos";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,6 +19,7 @@ import {
   ArtworkImagesImage_ImageFragment,
   UpdateImageAttributes,
   useUpdateImageMutation,
+  useRemoveImageMutation,
 } from "../../generated/graphql";
 
 gql`
@@ -30,6 +35,18 @@ gql`
         images {
           ...ArtworkImagesImage_image
         }
+      }
+    }
+  }
+`;
+
+gql`
+  mutation RemoveImage($artworkId: ID!, $imageId: ID!) {
+    remove_artwork_entity(
+      input: { id: $artworkId, entity: { id: $imageId, type: IMAGE } }
+    ) {
+      artwork {
+        ...ArtworkImagesFragment
       }
     }
   }
@@ -87,7 +104,9 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, updateImage] = useUpdateImageMutation();
+  const [_a, updateImage] = useUpdateImageMutation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_b, removeImage] = useRemoveImageMutation();
 
   const { sendNotification, sendError } = useAlerts();
 
@@ -114,8 +133,28 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
     });
   };
 
+  const handleRemove = async () => {
+    sendNotification({ body: "Removing..." });
+
+    try {
+      removeImage({ artworkId, imageId: image.id });
+      sendNotification({ body: "Image removed" });
+    } catch (err) {
+      console.error(err);
+      sendError({ body: (err as Error).message });
+    }
+  };
+
+  const { Confirmation, requestConfirmation } = useConfirm({
+    onConfirm: handleRemove,
+  });
+
   return (
     <>
+      <Confirmation>
+        {`Delete ${image.title ?? "image"}. Are you sure?`}
+      </Confirmation>
+
       {mode === "Open" && (
         <Modal zIndex={10} overlay onClose={handleClose}>
           <form onSubmit={handleSave()}>
@@ -160,20 +199,26 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
         </Modal>
       )}
 
-      <File
-        onClick={handleClick}
-        name={image.title ?? ""}
-        meta={image.description ?? `${image.width}×${image.height}`}
-      >
-        <ResponsiveImage
-          srcs={[image.thumbnail.urls._1x, image.thumbnail.urls._2x]}
-          aspectWidth={image.thumbnail.width}
-          aspectHeight={image.thumbnail.height}
-          maxWidth={image.thumbnail.width}
-          maxHeight={image.thumbnail.height}
-          backgroundColor="tertiary"
-        />
-      </File>
+      <Box position="relative" width="100%">
+        <ContextMenu position="absolute" top={4} right={4} zIndex={10}>
+          <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
+        </ContextMenu>
+
+        <File
+          onClick={handleClick}
+          name={image.title ?? ""}
+          meta={image.description ?? `${image.width}×${image.height}`}
+        >
+          <ResponsiveImage
+            srcs={[image.thumbnail.urls._1x, image.thumbnail.urls._2x]}
+            aspectWidth={image.thumbnail.width}
+            aspectHeight={image.thumbnail.height}
+            maxWidth={image.thumbnail.width}
+            maxHeight={image.thumbnail.height}
+            backgroundColor="tertiary"
+          />
+        </File>
+      </Box>
     </>
   );
 };

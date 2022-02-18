@@ -710,6 +710,14 @@ export type UpdateImageMutationVariables = Exact<{
 
 export type UpdateImageMutation = { __typename?: 'Mutation', update_artwork_entity?: { __typename?: 'UpdateArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> } } | null };
 
+export type RemoveImageMutationVariables = Exact<{
+  artworkId: Scalars['ID'];
+  imageId: Scalars['ID'];
+}>;
+
+
+export type RemoveImageMutation = { __typename?: 'Mutation', remove_artwork_entity?: { __typename?: 'RemoveArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string, images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> } } | null };
+
 export type ArtworkImagesImage_ImageFragment = { __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } };
 
 export type ArtworkLinksFragment = { __typename?: 'Artwork', id: string, links: Array<{ __typename?: 'Link', id: string, title?: string | null, url: string, state: State, kind: Kind }> };
@@ -1053,6 +1061,21 @@ export const UpdateImageDocument = gql`
 
 export function useUpdateImageMutation() {
   return Urql.useMutation<UpdateImageMutation, UpdateImageMutationVariables>(UpdateImageDocument);
+};
+export const RemoveImageDocument = gql`
+    mutation RemoveImage($artworkId: ID!, $imageId: ID!) {
+  remove_artwork_entity(
+    input: {id: $artworkId, entity: {id: $imageId, type: IMAGE}}
+  ) {
+    artwork {
+      ...ArtworkImagesFragment
+    }
+  }
+}
+    ${ArtworkImagesFragmentDoc}`;
+
+export function useRemoveImageMutation() {
+  return Urql.useMutation<RemoveImageMutation, RemoveImageMutationVariables>(RemoveImageDocument);
 };
 export const AddLinkDocument = gql`
     mutation AddLink($artworkId: ID!, $attributes: LinkAttributes!) {
