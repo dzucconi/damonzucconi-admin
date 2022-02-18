@@ -8,6 +8,10 @@ import {
   EmptyFrame,
   Cell,
   Select,
+  Box,
+  ContextMenu,
+  PaneOption,
+  useConfirm,
 } from "@auspices/eos";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -16,6 +20,7 @@ import {
   ArtworkAttachmentsAttachment_AttachmentFragment,
   State,
   UpdateAttachmentAttributes,
+  useRemoveAttachmentMutation,
   useUpdateAttachmentMutation,
 } from "../../generated/graphql";
 
@@ -35,6 +40,18 @@ gql`
         attachments {
           ...ArtworkAttachmentsAttachment_attachment
         }
+      }
+    }
+  }
+`;
+
+gql`
+  mutation RemoveAttachment($artworkId: ID!, $attachmentId: ID!) {
+    remove_artwork_entity(
+      input: { id: $artworkId, entity: { id: $attachmentId, type: ATTACHMENT } }
+    ) {
+      artwork {
+        ...ArtworkAttachmentsFragment
       }
     }
   }
@@ -85,7 +102,9 @@ export const ArtworkAttachmentsAttachment: React.FC<
     });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, updateAttachment] = useUpdateAttachmentMutation();
+  const [_a, updateAttachment] = useUpdateAttachmentMutation();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_b, removeAttachment] = useRemoveAttachmentMutation();
 
   const { sendNotification, sendError } = useAlerts();
 
@@ -112,8 +131,28 @@ export const ArtworkAttachmentsAttachment: React.FC<
     });
   };
 
+  const handleRemove = async () => {
+    sendNotification({ body: "Removing..." });
+
+    try {
+      removeAttachment({ artworkId, attachmentId: attachment.id });
+      sendNotification({ body: "Attachment removed" });
+    } catch (err) {
+      console.error(err);
+      sendError({ body: (err as Error).message });
+    }
+  };
+
+  const { Confirmation, requestConfirmation } = useConfirm({
+    onConfirm: handleRemove,
+  });
+
   return (
     <>
+      <Confirmation>
+        {`Delete ${attachment.file_name}. Are you sure?`}
+      </Confirmation>
+
       {mode === "Open" && (
         <Modal zIndex={10} overlay onClose={handleClose}>
           <form onSubmit={handleSave()}>
@@ -161,19 +200,25 @@ export const ArtworkAttachmentsAttachment: React.FC<
         </Modal>
       )}
 
-      <File
-        onClick={handleClick}
-        name={attachment.title!}
-        meta={attachment.file_name}
-      >
-        <EmptyFrame
-          width="100%"
-          height="100%"
-          border="1px solid"
-          borderColor="tertiary"
-          color="tertiary"
-        />
-      </File>
+      <Box position="relative" width="100%">
+        <ContextMenu position="absolute" top={4} right={4}>
+          <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
+        </ContextMenu>
+
+        <File
+          onClick={handleClick}
+          name={attachment.title!}
+          meta={attachment.file_name}
+        >
+          <EmptyFrame
+            width="100%"
+            height="100%"
+            border="1px solid"
+            borderColor="tertiary"
+            color="tertiary"
+          />
+        </File>
+      </Box>
     </>
   );
 };

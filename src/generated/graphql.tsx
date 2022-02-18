@@ -646,6 +646,14 @@ export type UpdateAttachmentMutationVariables = Exact<{
 
 export type UpdateAttachmentMutation = { __typename?: 'Mutation', update_artwork_entity?: { __typename?: 'UpdateArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', attachments: Array<{ __typename?: 'Attachment', id: string, file_name: string, file_type: string, state: State, title?: string | null, url: string }> } } | null };
 
+export type RemoveAttachmentMutationVariables = Exact<{
+  artworkId: Scalars['ID'];
+  attachmentId: Scalars['ID'];
+}>;
+
+
+export type RemoveAttachmentMutation = { __typename?: 'Mutation', remove_artwork_entity?: { __typename?: 'RemoveArtworkEntityMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string, attachments: Array<{ __typename?: 'Attachment', id: string, file_name: string, file_type: string, state: State, title?: string | null, url: string }> } } | null };
+
 export type ArtworkAttachmentsAttachment_AttachmentFragment = { __typename?: 'Attachment', id: string, file_name: string, file_type: string, state: State, title?: string | null, url: string };
 
 export type ArtworkAttributesFragment = { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null };
@@ -956,6 +964,21 @@ export const UpdateAttachmentDocument = gql`
 
 export function useUpdateAttachmentMutation() {
   return Urql.useMutation<UpdateAttachmentMutation, UpdateAttachmentMutationVariables>(UpdateAttachmentDocument);
+};
+export const RemoveAttachmentDocument = gql`
+    mutation RemoveAttachment($artworkId: ID!, $attachmentId: ID!) {
+  remove_artwork_entity(
+    input: {id: $artworkId, entity: {id: $attachmentId, type: ATTACHMENT}}
+  ) {
+    artwork {
+      ...ArtworkAttachmentsFragment
+    }
+  }
+}
+    ${ArtworkAttachmentsFragmentDoc}`;
+
+export function useRemoveAttachmentMutation() {
+  return Urql.useMutation<RemoveAttachmentMutation, RemoveAttachmentMutationVariables>(RemoveAttachmentDocument);
 };
 export const AddEmbedDocument = gql`
     mutation AddEmbed($artworkId: ID!, $attributes: EmbedAttributes!) {
