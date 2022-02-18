@@ -12,7 +12,7 @@ import {
   useAlerts,
 } from "@auspices/eos";
 
-const FileInput = styled.input.attrs({ id: "file" })`
+const FileInput = styled.input`
   width: 0.1px;
   height: 0.1px;
   opacity: 0;
@@ -25,26 +25,25 @@ const FileInput = styled.input.attrs({ id: "file" })`
   }
 `;
 
-const Upload = styled.label.attrs({
-  ...BUTTON,
-  for: "file",
-})`
+const Upload = styled.label.attrs({ ...BUTTON })`
   ${boxMixin}
   ${buttonMixin}
   cursor: pointer;
 `;
 
 type FileUploadButtonProps = {
+  id: string;
   onUpload(url: string): Promise<any>;
   onComplete?(): void;
-  slug: string;
+  fileKey: string;
 };
 
 export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
+  id,
   children,
   onUpload,
   onComplete,
-  slug,
+  fileKey,
   ...rest
 }) => {
   const { sendNotification, sendError } = useAlerts();
@@ -89,13 +88,19 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
       <Tooltip label="click to add files" placement="bottom" distance={10}>
         <Box display="flex" height="auto">
           <FileInput
+            id={id}
             type="file"
-            accept="image/*"
+            accept="*/*"
             onChange={handleChange}
             multiple
           />
 
-          <Upload flex="1" {...rest}>
+          <Upload
+            // @ts-ignore
+            for={id}
+            flex="1"
+            {...rest}
+          >
             {children}
           </Upload>
         </Box>
@@ -104,7 +109,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
       {uploadingFiles.length > 0 && (
         <Modal overlay zIndex={100}>
           <FilesUploader
-            slug={slug}
+            fileKey={fileKey}
             files={acceptedFiles}
             onUpload={handleUpload}
           />

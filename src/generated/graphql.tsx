@@ -412,8 +412,8 @@ export type MutationUpdate_Artwork_EntityArgs = {
 };
 
 export type PresignedUrlAttributes = {
-  key: Scalars['String'];
-  type: SupportedUpload;
+  fileKey: Scalars['String'];
+  fileType: Scalars['String'];
 };
 
 /** The query root for this schema */
@@ -534,12 +534,6 @@ export type Status = {
   authenticated: Scalars['Boolean'];
   up: Scalars['Boolean'];
 };
-
-export enum SupportedUpload {
-  Gif = 'GIF',
-  Jpeg = 'JPEG',
-  Png = 'PNG'
-}
 
 export type UpdateArtworkAttributes = {
   depth?: InputMaybe<Scalars['Float']>;

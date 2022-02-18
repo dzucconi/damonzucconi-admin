@@ -44,7 +44,8 @@ export const ArtworkImages: React.FC<ArtworkImagesProps> = ({
   return (
     <Stack {...rest}>
       <FileUploadButton
-        slug={artwork.slug}
+        id="ArtworkImages"
+        fileKey={`images/${artwork.slug}`}
         onUpload={(url) => {
           return addArtworkImage({ id: artwork.id, image: { url } });
         }}
