@@ -9,6 +9,7 @@ import {
   ResponsiveImage,
   Loading,
   useAlerts,
+  Button,
 } from "@auspices/eos";
 import {
   ArtworkImages,
@@ -25,10 +26,16 @@ import {
   useArtworkShowPageUpdateMutation,
 } from "../generated/graphql";
 
-export const ARTWORK_SHOW_PAGE_ARTWORK_FRAGMENT = gql`
+gql`
   fragment ArtworkShowPageArtworkFragment on Artwork {
-    id
     ...ArtworkAttributesFragment
+    ...ArtworkImagesFragment
+    ...ArtworkLinksFragment
+    ...ArtworkEmbedsFragment
+    ...ArtworkAttachmentsFragment
+    ...ArtworkEditionsFragment
+    id
+    slug
     primaryImage: images(limit: 1) {
       id
       thumbnail: resized(width: 400, height: 400) {
@@ -40,24 +47,18 @@ export const ARTWORK_SHOW_PAGE_ARTWORK_FRAGMENT = gql`
         }
       }
     }
-    ...ArtworkImagesFragment
-    ...ArtworkLinksFragment
-    ...ArtworkEmbedsFragment
-    ...ArtworkAttachmentsFragment
-    ...ArtworkEditionsFragment
   }
 `;
 
-export const ARTWORK_SHOW_PAGE_QUERY = gql`
+gql`
   query ArtworkShowPageQuery($id: ID!) {
     artwork(id: $id) {
       ...ArtworkShowPageArtworkFragment
     }
   }
-  ${ARTWORK_SHOW_PAGE_ARTWORK_FRAGMENT}
 `;
 
-export const ARTWORK_SHOW_PAGE_UPDATE_MUTATION = gql`
+gql`
   mutation ArtworkShowPageUpdateMutation(
     $id: ID!
     $attributes: UpdateArtworkAttributes!
@@ -68,7 +69,6 @@ export const ARTWORK_SHOW_PAGE_UPDATE_MUTATION = gql`
       }
     }
   }
-  ${ARTWORK_SHOW_PAGE_ARTWORK_FRAGMENT}
 `;
 
 export const ArtworkShowPage: React.FC = () => {
@@ -124,6 +124,14 @@ export const ArtworkShowPage: React.FC = () => {
       </Helmet>
 
       <Stack>
+        <Button
+          as="a"
+          href={`https://www.damonzucconi.com/artworks/${artwork.slug}`}
+          target="_blank"
+        >
+          View live page
+        </Button>
+
         <Stack direction="horizontal">
           <Pill flex={1} px={0} py={0}>
             <EmptyFrame
