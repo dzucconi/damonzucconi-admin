@@ -21,6 +21,7 @@ import {
   useUpdateImageMutation,
   useRemoveImageMutation,
 } from "../../generated/graphql";
+import { useHover } from "../../hooks/useHover";
 
 gql`
   mutation UpdateImage(
@@ -149,6 +150,14 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
     onConfirm: handleRemove,
   });
 
+  const {
+    handleClose: handleHoverClose,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleOpen: handleHoverOpen,
+    mode: hoverMode,
+  } = useHover();
+
   return (
     <>
       <Confirmation>
@@ -199,10 +208,24 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
         </Modal>
       )}
 
-      <Box position="relative" width="100%">
-        <ContextMenu position="absolute" top={4} right={4} zIndex={10}>
-          <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
-        </ContextMenu>
+      <Box
+        position="relative"
+        width="100%"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {hoverMode !== "Resting" && (
+          <ContextMenu
+            position="absolute"
+            top={4}
+            right={4}
+            zIndex={10}
+            onOpen={handleHoverOpen}
+            onClose={handleHoverClose}
+          >
+            <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
+          </ContextMenu>
+        )}
 
         <File
           onClick={handleClick}
