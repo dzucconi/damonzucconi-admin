@@ -263,9 +263,10 @@ export type Exhibition = {
   external_url?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   images: Array<Image>;
-  kind: Scalars['String'];
+  kind: ExhibitionKind;
   slug: Scalars['String'];
   start_date?: Maybe<Scalars['String']>;
+  state: State;
   title: Scalars['String'];
   updated_at: Scalars['String'];
   venue?: Maybe<Scalars['String']>;
@@ -312,6 +313,11 @@ export type ExhibitionUpdated_AtArgs = {
   format?: InputMaybe<Scalars['String']>;
   relative?: InputMaybe<Scalars['Boolean']>;
 };
+
+export enum ExhibitionKind {
+  Group = 'GROUP',
+  Solo = 'SOLO'
+}
 
 export enum Format {
   Html = 'HTML',
@@ -793,6 +799,11 @@ export type ArtworkShowPageUpdateMutationVariables = Exact<{
 
 export type ArtworkShowPageUpdateMutation = { __typename?: 'Mutation', update_artwork?: { __typename?: 'UpdateArtworkMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, url: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, title?: string | null, url: string, state: State, kind: Kind, display: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html: string }>, attachments: Array<{ __typename?: 'Attachment', id: string, file_name: string, file_type: string, state: State, title?: string | null, url: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: EditionState, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> } } | null };
 
+export type ExhibitionIndexPageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ExhibitionIndexPageQuery = { __typename?: 'Query', exhibitions: Array<{ __typename?: 'Exhibition', id: string, slug: string, title: string, state: State, kind: ExhibitionKind, year?: string | null, images: Array<{ __typename: 'Image' }> }> };
+
 export const ArtworkAttributesFragmentDoc = gql`
     fragment ArtworkAttributesFragment on Artwork {
   id
@@ -1210,4 +1221,23 @@ export const ArtworkShowPageUpdateMutationDocument = gql`
 
 export function useArtworkShowPageUpdateMutation() {
   return Urql.useMutation<ArtworkShowPageUpdateMutation, ArtworkShowPageUpdateMutationVariables>(ArtworkShowPageUpdateMutationDocument);
+};
+export const ExhibitionIndexPageQueryDocument = gql`
+    query ExhibitionIndexPageQuery {
+  exhibitions {
+    id
+    slug
+    title
+    state
+    kind
+    year: start_date(format: "%Y")
+    images {
+      __typename
+    }
+  }
+}
+    `;
+
+export function useExhibitionIndexPageQuery(options?: Omit<Urql.UseQueryArgs<ExhibitionIndexPageQueryVariables>, 'query'>) {
+  return Urql.useQuery<ExhibitionIndexPageQuery>({ query: ExhibitionIndexPageQueryDocument, ...options });
 };

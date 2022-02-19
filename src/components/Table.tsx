@@ -15,6 +15,7 @@ export const Table = styled.table<BoxProps>`
   tr > td {
     border-bottom: 1px solid ${themeGet("primary")};
     border-left: 1px solid ${themeGet("primary")};
+    vertical-align: middle;
   }
   tr > th:first-of-type,
   tr > td:first-of-type {

@@ -132,7 +132,7 @@ export const ArtworkIndexPage: React.FC = () => {
 
               return (
                 <tr key={artwork.id}>
-                  <td style={{ verticalAlign: "middle" }}>
+                  <td>
                     {image ? (
                       <Tooltip
                         label={
@@ -196,7 +196,7 @@ export const ArtworkIndexPage: React.FC = () => {
                     <Cell borderWidth={0}>{artwork.material}</Cell>
                   </td>
 
-                  <td style={{ verticalAlign: "middle" }}>
+                  <td>
                     <Box mx={6} textAlign="center" lineHeight={0}>
                       <Tag>{artwork.state}</Tag>
                     </Box>

@@ -21,6 +21,7 @@ import {
 } from "./pages";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { UrqlProvider } from "./lib/urql";
+import { ExhibitionIndexPage } from "./pages/ExhibitionIndexPage";
 
 const App = () => {
   const { theme } = useThemer();
@@ -82,6 +83,10 @@ const App = () => {
 
                   <Route path="/artworks/:id" exact>
                     <ArtworkShowPage />
+                  </Route>
+
+                  <Route path="/exhibitions" exact>
+                    <ExhibitionIndexPage />
                   </Route>
                 </Switch>
               </Stack>
