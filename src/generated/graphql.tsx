@@ -767,7 +767,7 @@ export type FilesUploaderQuery = { __typename?: 'Query', presigned_upload_urls: 
 export type ArtworkIndexPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArtworkIndexPageQuery = { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string }> };
+export type ArtworkIndexPageQuery = { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string, material?: string | null, year: number, images: Array<{ __typename?: 'Image', title?: string | null, thumb: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } }, preview: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> }> };
 
 export type AddArtworkMutationVariables = Exact<{
   attributes: ArtworkAttributes;
@@ -1145,6 +1145,27 @@ export const ArtworkIndexPageQueryDocument = gql`
     state
     slug
     title
+    material
+    year
+    images(limit: 1) {
+      title
+      thumb: resized(width: 25, height: 25) {
+        width
+        height
+        urls {
+          _1x
+          _2x
+        }
+      }
+      preview: resized(width: 500, height: 500) {
+        width
+        height
+        urls {
+          _1x
+          _2x
+        }
+      }
+    }
   }
 }
     `;

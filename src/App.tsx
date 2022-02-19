@@ -57,7 +57,7 @@ const App = () => {
                   top={0}
                   zIndex={2}
                 >
-                  <Button as={Link} flex={1} to="/artwork/new">
+                  <Button as={Link} flex={1} to="/artworks/new">
                     <Plus size={4} strokeWidth="1px" mr={3} />
                     Artwork
                   </Button>
@@ -72,7 +72,7 @@ const App = () => {
                 </Stack>
 
                 <Switch>
-                  <Route path="/artwork/new" exact>
+                  <Route path="/artworks/new" exact>
                     <ArtworkNewPage />
                   </Route>
 
@@ -80,7 +80,7 @@ const App = () => {
                     <ArtworkIndexPage />
                   </Route>
 
-                  <Route path="/artwork/:id" exact>
+                  <Route path="/artworks/:id" exact>
                     <ArtworkShowPage />
                   </Route>
                 </Switch>

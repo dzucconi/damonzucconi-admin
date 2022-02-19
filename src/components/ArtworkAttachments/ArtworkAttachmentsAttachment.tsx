@@ -23,6 +23,7 @@ import {
   useRemoveAttachmentMutation,
   useUpdateAttachmentMutation,
 } from "../../generated/graphql";
+import { useHover } from "../../hooks/useHover";
 
 gql`
   mutation UpdateAttachment(
@@ -147,9 +148,11 @@ export const ArtworkAttachmentsAttachment: React.FC<
     onConfirm: handleRemove,
   });
 
+  const hover = useHover();
+
   return (
     <>
-      <Confirmation>
+      <Confirmation zIndex={10}>
         {`Delete ${attachment.file_name}. Are you sure?`}
       </Confirmation>
 
@@ -200,10 +203,23 @@ export const ArtworkAttachmentsAttachment: React.FC<
         </Modal>
       )}
 
-      <Box position="relative" width="100%">
-        <ContextMenu position="absolute" top={4} right={4}>
-          <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
-        </ContextMenu>
+      <Box
+        position="relative"
+        width="100%"
+        onMouseEnter={hover.handleMouseEnter}
+        onMouseLeave={hover.handleMouseLeave}
+      >
+        {hover.mode !== "Resting" && (
+          <ContextMenu
+            position="absolute"
+            top={4}
+            right={4}
+            onOpen={hover.handleOpen}
+            onClose={hover.handleClose}
+          >
+            <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
+          </ContextMenu>
+        )}
 
         <File
           onClick={handleClick}
