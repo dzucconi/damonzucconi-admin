@@ -150,13 +150,7 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
     onConfirm: handleRemove,
   });
 
-  const {
-    handleClose: handleHoverClose,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleOpen: handleHoverOpen,
-    mode: hoverMode,
-  } = useHover();
+  const hover = useHover();
 
   return (
     <>
@@ -211,17 +205,17 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
       <Box
         position="relative"
         width="100%"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={hover.handleMouseEnter}
+        onMouseLeave={hover.handleMouseLeave}
       >
-        {hoverMode !== "Resting" && (
+        {hover.mode !== "Resting" && (
           <ContextMenu
             position="absolute"
             top={4}
             right={4}
             zIndex={10}
-            onOpen={handleHoverOpen}
-            onClose={handleHoverClose}
+            onOpen={hover.handleOpen}
+            onClose={hover.handleClose}
           >
             <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
           </ContextMenu>

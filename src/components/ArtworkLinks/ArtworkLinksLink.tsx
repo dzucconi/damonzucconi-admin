@@ -1,16 +1,26 @@
-import { Button, Modal, Tag } from "@auspices/eos";
+import {
+  Modal,
+  Tag,
+  File,
+  Box,
+  Truncate,
+  ContextMenu,
+  PaneOption,
+} from "@auspices/eos";
 import React, { useState } from "react";
 import { gql } from "urql";
 import { ArtworkLinksLink_LinkFragment } from "../../generated/graphql";
+import { useHover } from "../../hooks/useHover";
 import { ArtworkLinksLinkForm } from "./ArtworkLinksLinkForm";
 
 gql`
   fragment ArtworkLinksLink_link on Link {
+    ...ArtworkLinksLinkForm_link
     title
     url
+    display: url(pretty: true)
     state
     kind
-    ...ArtworkLinksLinkForm_link
   }
 `;
 
@@ -33,6 +43,8 @@ export const ArtworkLinksLink: React.FC<ArtworkLinksLinkProps> = ({
     setMode("Pending");
   };
 
+  const hover = useHover();
+
   return (
     <>
       {mode === "Open" && (
@@ -45,11 +57,51 @@ export const ArtworkLinksLink: React.FC<ArtworkLinksLinkProps> = ({
         </Modal>
       )}
 
-      <Button flex={1} onClick={handleClick} justifyContent="flex-start">
-        {link.title ?? link.url}
-        <Tag ml={4}>{link.state}</Tag>
-        <Tag ml={4}>{link.kind}</Tag>
-      </Button>
+      <Box
+        position="relative"
+        width="100%"
+        onMouseEnter={hover.handleMouseEnter}
+        onMouseLeave={hover.handleMouseLeave}
+      >
+        {hover.mode !== "Resting" && (
+          <ContextMenu
+            position="absolute"
+            top={4}
+            right={4}
+            onOpen={hover.handleOpen}
+            onClose={hover.handleClose}
+          >
+            <PaneOption as="a" href={link.url} target="_blank">
+              Open in new tab
+            </PaneOption>
+          </ContextMenu>
+        )}
+
+        <File onClick={handleClick} name={link.title ?? link.display}>
+          <Box
+            width="100%"
+            height="100%"
+            border="1px solid"
+            borderColor="secondary"
+          >
+            <Box
+              px={4}
+              py={3}
+              borderBottom="1px solid"
+              borderColor="secondary"
+              color="secondary"
+              fontSize={0}
+            >
+              <Truncate>{link.display}</Truncate>
+            </Box>
+
+            <Box p={3}>
+              <Tag mr={2}>{link.state}</Tag>
+              <Tag>{link.kind}</Tag>
+            </Box>
+          </Box>
+        </File>
+      </Box>
     </>
   );
 };
