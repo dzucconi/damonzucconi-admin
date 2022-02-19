@@ -82,13 +82,13 @@ export const ArtworkLinksLink: React.FC<ArtworkLinksLinkProps> = ({
             width="100%"
             height="100%"
             border="1px solid"
-            borderColor="secondary"
+            borderColor="tertiary"
           >
             <Box
               px={4}
               py={3}
               borderBottom="1px solid"
-              borderColor="secondary"
+              borderColor="tertiary"
               color="secondary"
               fontSize={0}
             >

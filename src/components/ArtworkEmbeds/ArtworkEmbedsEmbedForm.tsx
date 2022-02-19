@@ -123,7 +123,15 @@ export const ArtworkEmbedsEmbedForm: React.FC<ArtworkEmbedsEmbedFormProps> = ({
   return (
     <form onSubmit={handleSave()}>
       <Stack width={600} bg="background">
-        <Input as="textarea" placeholder="HTML" {...register("html")} />
+        <Input
+          as="textarea"
+          placeholder="HTML"
+          rows={10}
+          fontFamily="mono"
+          fontSize={1}
+          px={5}
+          {...register("html")}
+        />
 
         <Stack direction="horizontal">
           {embed && (
