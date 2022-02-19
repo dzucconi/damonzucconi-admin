@@ -60,6 +60,7 @@ gql`
     height
     title
     description
+    url
     thumbnail: resized(width: 250, height: 250) {
       height
       width
@@ -213,10 +214,14 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
             position="absolute"
             top={4}
             right={4}
-            zIndex={10}
+            zIndex={2}
             onOpen={hover.handleOpen}
             onClose={hover.handleClose}
           >
+            <PaneOption as="a" href={image.url} target="_blank">
+              Open in new tab
+            </PaneOption>
+
             <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
           </ContextMenu>
         )}
