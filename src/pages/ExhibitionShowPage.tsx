@@ -9,10 +9,12 @@ import {
   ExhibitionAttributes as Attributes,
 } from "../generated/graphql";
 import { ExhibitionAttributes } from "../components/ExhibitionAttributes";
+import { ExhibitionImages } from "../components/ExhibitionImages";
 
 gql`
   fragment ExhibitionShowPageExhibitionFragment on Exhibition {
     ...ExhibitionAttributesFragment
+    ...ExhibitionImagesFragment
     id
     title
     slug
@@ -106,6 +108,8 @@ export const ExhibitionShowPage: React.FC = () => {
           onSubmit={handleSubmit}
           label="Save"
         />
+
+        <ExhibitionImages exhibition={exhibition} />
       </Stack>
     </>
   );
