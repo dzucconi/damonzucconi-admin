@@ -1,5 +1,15 @@
 import React from "react";
-import { Input, Stack, Pill, Field, Button, Select } from "@auspices/eos";
+import {
+  Input,
+  Stack,
+  Pill,
+  Field,
+  Button,
+  Select,
+  StackProps,
+  BoxProps,
+  Box,
+} from "@auspices/eos";
 import gql from "graphql-tag";
 import {
   ExhibitionAttributesFragment,
@@ -26,7 +36,7 @@ gql`
   }
 `;
 
-type ExhibitionAttributesProps = {
+type ExhibitionAttributesProps = BoxProps & {
   defaults?: ExhibitionAttributesFragment;
   label?: string;
   onSubmit(attributes: Attributes): void;
@@ -36,6 +46,7 @@ export const ExhibitionAttributes: React.FC<ExhibitionAttributesProps> = ({
   label = "Add",
   defaults,
   onSubmit,
+  ...rest
 }) => {
   const { register, handleSubmit, getValues, setValue } = useForm<Attributes>({
     defaultValues: {
@@ -53,87 +64,89 @@ export const ExhibitionAttributes: React.FC<ExhibitionAttributesProps> = ({
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack width="100%">
-        <Select
-          label="State"
-          options={Object.entries(State).map(([label, value]) => ({
-            label,
-            value,
-          }))}
-          value={getValues().state}
-          onChange={(value: State) => {
-            setValue("state", value);
-          }}
-        />
+    <Box {...rest}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack width="100%">
+          <Select
+            label="State"
+            options={Object.entries(State).map(([label, value]) => ({
+              label,
+              value,
+            }))}
+            value={getValues().state}
+            onChange={(value: State) => {
+              setValue("state", value);
+            }}
+          />
 
-        <Field
-          label="Title"
-          input={{
-            placeholder: "Required",
-            ...register("title", { required: true }),
-          }}
-        />
+          <Field
+            label="Title"
+            input={{
+              placeholder: "Required",
+              ...register("title", { required: true }),
+            }}
+          />
 
-        <Field
-          label="City"
-          input={{
-            placeholder: "Optional",
-            ...register("city", { required: false }),
-          }}
-        />
+          <Field
+            label="City"
+            input={{
+              placeholder: "Optional",
+              ...register("city", { required: false }),
+            }}
+          />
 
-        <Field
-          label="Country"
-          input={{
-            placeholder: "Optional",
-            ...register("country", { required: false }),
-          }}
-        />
+          <Field
+            label="Country"
+            input={{
+              placeholder: "Optional",
+              ...register("country", { required: false }),
+            }}
+          />
 
-        <Field
-          label="Venue"
-          input={{
-            placeholder: "Optional",
-            ...register("venue", { required: false }),
-          }}
-        />
+          <Field
+            label="Venue"
+            input={{
+              placeholder: "Optional",
+              ...register("venue", { required: false }),
+            }}
+          />
 
-        <Field
-          label="External URL"
-          input={{
-            type: "url",
-            placeholder: "https://",
-            ...register("externalUrl", { required: false }),
-          }}
-        />
+          <Field
+            label="External URL"
+            input={{
+              type: "url",
+              placeholder: "https://",
+              ...register("externalUrl", { required: false }),
+            }}
+          />
 
-        <Field
-          label="Start date"
-          input={{
-            type: "date",
-            ...register("startDate", { required: false }),
-          }}
-        />
+          <Field
+            label="Start date"
+            input={{
+              type: "date",
+              ...register("startDate", { required: false }),
+            }}
+          />
 
-        <Field
-          label="End date"
-          input={{
-            type: "date",
-            ...register("endDate", { required: false }),
-          }}
-        />
+          <Field
+            label="End date"
+            input={{
+              type: "date",
+              ...register("endDate", { required: false }),
+            }}
+          />
 
-        <Pill>Description</Pill>
-        <Input
-          as="textarea"
-          placeholder="A longer contextual text"
-          rows={7}
-          {...register("description")}
-        />
+          <Pill>Description</Pill>
+          <Input
+            as="textarea"
+            placeholder="A longer contextual text"
+            rows={7}
+            {...register("description")}
+          />
 
-        <Button type="submit">{label}</Button>
-      </Stack>
-    </form>
+          <Button type="submit">{label}</Button>
+        </Stack>
+      </form>
+    </Box>
   );
 };
