@@ -3,16 +3,16 @@ import gql from "graphql-tag";
 import { Helmet } from "react-helmet";
 import { useAlerts } from "@auspices/eos";
 import { useHistory } from "react-router";
-import { ArtworkAttributes } from "../components/ArtworkAttributes";
+import { ExhibitionAttributes } from "../components/ExhibitionAttributes";
 import {
-  ArtworkAttributes as Attributes,
-  useAddArtworkMutation,
+  ExhibitionAttributes as Attributes,
+  useAddExhibitionMutation,
 } from "../generated/graphql";
 
 gql`
-  mutation AddArtworkMutation($attributes: ArtworkAttributes!) {
-    add_artwork(input: { attributes: $attributes }) {
-      artwork {
+  mutation AddExhibitionMutation($attributes: ExhibitionAttributes!) {
+    add_exhibition(input: { attributes: $attributes }) {
+      exhibition {
         id
         slug
       }
@@ -27,7 +27,7 @@ enum Mode {
   Saved,
 }
 
-export const ArtworkNewPage: React.FC = () => {
+export const ExhibitionNewPage: React.FC = () => {
   const history = useHistory();
 
   const { sendError, sendNotification } = useAlerts();
@@ -35,21 +35,21 @@ export const ArtworkNewPage: React.FC = () => {
   const [mode, setMode] = useState(Mode.Resting);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, addArtwork] = useAddArtworkMutation();
+  const [_, addExhibition] = useAddExhibitionMutation();
 
   const handleSubmit = async (attributes: Attributes) => {
     setMode(Mode.Saving);
     sendNotification({ body: "Saving" });
 
     try {
-      const response = await addArtwork({ attributes });
+      const response = await addExhibition({ attributes });
 
-      sendNotification({ body: "Added artwork successfully" });
+      sendNotification({ body: "Added exhibition successfully" });
       setMode(Mode.Saved);
 
-      const { id } = response.data!.add_artwork!.artwork;
+      const { id } = response.data!.add_exhibition!.exhibition;
 
-      history.push(`/artworks/${id}`);
+      history.push(`/exhibitions/${id}`);
     } catch (err) {
       sendError({ body: (err as Error).message });
       setMode(Mode.Error);
@@ -59,10 +59,10 @@ export const ArtworkNewPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>New Artwork</title>
+        <title>New Exhibition</title>
       </Helmet>
 
-      <ArtworkAttributes
+      <ExhibitionAttributes
         onSubmit={handleSubmit}
         label={
           {

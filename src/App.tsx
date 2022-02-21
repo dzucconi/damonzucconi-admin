@@ -12,6 +12,8 @@ import {
   Plus,
   ThemerProvider,
   useThemer,
+  Dropdown,
+  PaneOption,
 } from "@auspices/eos";
 import {
   ArtworkIndexPage,
@@ -23,6 +25,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { UrqlProvider } from "./lib/urql";
 import { ExhibitionIndexPage } from "./pages/ExhibitionIndexPage";
 import { ExhibitionShowPage } from "./pages/ExhibitionShowPage";
+import { ExhibitionNewPage } from "./pages/ExhibitionNewPage";
 
 const App = () => {
   const { theme } = useThemer();
@@ -59,10 +62,35 @@ const App = () => {
                   top={0}
                   zIndex={2}
                 >
-                  <Button as={Link} flex={1} to="/artworks/new">
-                    <Plus size={4} strokeWidth="1px" mr={3} />
-                    Artwork
-                  </Button>
+                  <Dropdown
+                    label={
+                      <Button height="100%">
+                        <Plus size={4} strokeWidth="1px" />
+                      </Button>
+                    }
+                  >
+                    {({ handleClose }) => {
+                      return (
+                        <>
+                          <PaneOption
+                            as={Link}
+                            to="/artworks/new"
+                            onClick={handleClose}
+                          >
+                            Add artwork
+                          </PaneOption>
+
+                          <PaneOption
+                            as={Link}
+                            to="/exhibitions/new"
+                            onClick={handleClose}
+                          >
+                            Add exhibition
+                          </PaneOption>
+                        </>
+                      );
+                    }}
+                  </Dropdown>
 
                   <Button as={Link} flex={1} to="/artworks">
                     Artworks
@@ -84,6 +112,10 @@ const App = () => {
 
                   <Route path="/artworks/:id" exact>
                     <ArtworkShowPage />
+                  </Route>
+
+                  <Route path="/exhibitions/new" exact>
+                    <ExhibitionNewPage />
                   </Route>
 
                   <Route path="/exhibitions" exact>

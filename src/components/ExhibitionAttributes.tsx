@@ -78,6 +78,7 @@ export const ExhibitionAttributes: React.FC<ExhibitionAttributesProps> = ({
         <Field
           label="City"
           input={{
+            placeholder: "Optional",
             ...register("city", { required: false }),
           }}
         />
@@ -85,6 +86,7 @@ export const ExhibitionAttributes: React.FC<ExhibitionAttributesProps> = ({
         <Field
           label="Country"
           input={{
+            placeholder: "Optional",
             ...register("country", { required: false }),
           }}
         />
@@ -92,6 +94,7 @@ export const ExhibitionAttributes: React.FC<ExhibitionAttributesProps> = ({
         <Field
           label="Venue"
           input={{
+            placeholder: "Optional",
             ...register("venue", { required: false }),
           }}
         />

@@ -877,6 +877,13 @@ export type ExhibitionIndexPageQueryVariables = Exact<{ [key: string]: never; }>
 
 export type ExhibitionIndexPageQuery = { __typename?: 'Query', exhibitions: Array<{ __typename?: 'Exhibition', id: string, slug: string, title: string, state: State, kind: ExhibitionKind, year?: string | null, images: Array<{ __typename: 'Image' }> }> };
 
+export type AddExhibitionMutationVariables = Exact<{
+  attributes: ExhibitionAttributes;
+}>;
+
+
+export type AddExhibitionMutation = { __typename?: 'Mutation', add_exhibition?: { __typename?: 'AddExhibitionMutationPayload', exhibition: { __typename?: 'Exhibition', id: string, slug: string } } | null };
+
 export type ExhibitionShowPageExhibitionFragment = { __typename?: 'Exhibition', id: string, title: string, slug: string, state: State, city?: string | null, country?: string | null, description?: string | null, start_date?: string | null, end_date?: string | null, external_url?: string | null, kind: ExhibitionKind, venue?: string | null };
 
 export type ExhibitionShowPageQueryVariables = Exact<{
@@ -1354,6 +1361,20 @@ export const ExhibitionIndexPageQueryDocument = gql`
 
 export function useExhibitionIndexPageQuery(options?: Omit<Urql.UseQueryArgs<ExhibitionIndexPageQueryVariables>, 'query'>) {
   return Urql.useQuery<ExhibitionIndexPageQuery>({ query: ExhibitionIndexPageQueryDocument, ...options });
+};
+export const AddExhibitionMutationDocument = gql`
+    mutation AddExhibitionMutation($attributes: ExhibitionAttributes!) {
+  add_exhibition(input: {attributes: $attributes}) {
+    exhibition {
+      id
+      slug
+    }
+  }
+}
+    `;
+
+export function useAddExhibitionMutation() {
+  return Urql.useMutation<AddExhibitionMutation, AddExhibitionMutationVariables>(AddExhibitionMutationDocument);
 };
 export const ExhibitionShowPageQueryDocument = gql`
     query ExhibitionShowPageQuery($id: ID!) {
