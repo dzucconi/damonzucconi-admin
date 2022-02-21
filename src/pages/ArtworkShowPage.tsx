@@ -86,18 +86,18 @@ export const ArtworkShowPage: React.FC = () => {
   const [_, updateArtwork] = useArtworkShowPageUpdateMutation();
 
   const handleSubmit = async (attributes: Attributes) => {
-    sendNotification({ body: "updating" });
+    sendNotification({ body: "Updating artwork" });
 
     try {
       const response = await updateArtwork({ id, attributes });
 
       const { artwork: updatedArtwork } = response.data!.update_artwork!;
 
-      sendNotification({ body: `updated ${updatedArtwork.title}` });
+      sendNotification({ body: `Updated ${updatedArtwork.title}` });
 
       // Slug updated; redirect
       if (updatedArtwork.slug !== id) {
-        history.push(`/artwork/${updatedArtwork.slug}`);
+        history.push(`/artworks/${updatedArtwork.slug}`);
       }
     } catch (err) {
       sendError({ body: (err as Error).message });

@@ -140,6 +140,7 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
         <Input
           as="textarea"
           placeholder="A brief explanation; marginal"
+          rows={4}
           {...register("gloss")}
         />
 
@@ -147,6 +148,7 @@ export const ArtworkAttributes: React.FC<ArtworkAttributesProps> = ({
         <Input
           as="textarea"
           placeholder="A longer contextual text"
+          rows={4}
           {...register("description")}
         />
 
