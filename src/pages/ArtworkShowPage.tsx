@@ -156,6 +156,7 @@ export const ArtworkShowPage: React.FC = () => {
           </Pill>
 
           <ArtworkAttributes
+            flex={1.5}
             defaults={artwork}
             onSubmit={handleSubmit}
             label="Update"

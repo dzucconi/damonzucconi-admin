@@ -2,7 +2,15 @@ import React from "react";
 import gql from "graphql-tag";
 import { Helmet } from "react-helmet";
 import { useHistory, useParams } from "react-router";
-import { Stack, Loading, useAlerts, Button } from "@auspices/eos";
+import {
+  Stack,
+  Loading,
+  useAlerts,
+  Button,
+  EmptyFrame,
+  ResponsiveImage,
+  Pill,
+} from "@auspices/eos";
 import {
   useExhibitionShowPageQuery,
   useExhibitionShowPageUpdateMutation,
@@ -18,6 +26,17 @@ gql`
     id
     title
     slug
+    primaryImage: images(limit: 1) {
+      id
+      thumbnail: resized(width: 400, height: 400) {
+        height
+        width
+        urls {
+          _1x
+          _2x
+        }
+      }
+    }
   }
 `;
 
@@ -85,6 +104,7 @@ export const ExhibitionShowPage: React.FC = () => {
   }
 
   const { exhibition } = data;
+  const [image] = exhibition.primaryImage;
 
   if (!exhibition) return null;
 
@@ -103,11 +123,36 @@ export const ExhibitionShowPage: React.FC = () => {
           View live page
         </Button>
 
-        <ExhibitionAttributes
-          defaults={exhibition}
-          onSubmit={handleSubmit}
-          label="Save"
-        />
+        <Stack direction="horizontal">
+          <Pill flex={1} px={0} py={0}>
+            <EmptyFrame
+              width="100%"
+              height="100%"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              {image?.thumbnail && (
+                <ResponsiveImage
+                  srcs={[image.thumbnail.urls._1x, image.thumbnail.urls._2x]}
+                  maxWidth={image.thumbnail.width}
+                  maxHeight={image.thumbnail.height}
+                  aspectWidth={image.thumbnail.width}
+                  aspectHeight={image.thumbnail.height}
+                  position="relative"
+                  zIndex={1}
+                />
+              )}
+            </EmptyFrame>
+          </Pill>
+
+          <ExhibitionAttributes
+            flex={1.5}
+            defaults={exhibition}
+            onSubmit={handleSubmit}
+            label="Save"
+          />
+        </Stack>
 
         <ExhibitionImages exhibition={exhibition} />
       </Stack>
