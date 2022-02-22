@@ -20,7 +20,7 @@ import { useKeyboardListNavigation } from "use-keyboard-list-navigation";
 import { useHistory } from "react-router";
 
 gql`
-  query ArtworkIndexPageQuery {
+  fragment ArtworkIndexPageFragment on Query {
     artworks {
       id
       state
@@ -48,6 +48,10 @@ gql`
         }
       }
     }
+  }
+
+  query ArtworkIndexPageQuery {
+    ...ArtworkIndexPageFragment
   }
 `;
 

@@ -6,7 +6,7 @@ import { useExhibitionIndexPageQuery } from "../generated/graphql";
 import { Table } from "../components/Table";
 
 gql`
-  query ExhibitionIndexPageQuery {
+  fragment ExhibitionIndexPageFragment on Query {
     exhibitions {
       id
       slug
@@ -18,6 +18,9 @@ gql`
         __typename
       }
     }
+  }
+  query ExhibitionIndexPageQuery {
+    ...ExhibitionIndexPageFragment
   }
 `;
 

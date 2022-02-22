@@ -217,7 +217,9 @@ export const ArtworkAttachmentsAttachment: React.FC<
             onOpen={hover.handleOpen}
             onClose={hover.handleClose}
           >
-            <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
+            <PaneOption color="danger" onClick={requestConfirmation}>
+              Delete
+            </PaneOption>
           </ContextMenu>
         )}
 

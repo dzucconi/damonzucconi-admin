@@ -222,7 +222,9 @@ export const ArtworkImagesImage: React.FC<ArtworkImagesImageProps> = ({
               Open in new tab
             </PaneOption>
 
-            <PaneOption onClick={requestConfirmation}>Delete</PaneOption>
+            <PaneOption color="danger" onClick={requestConfirmation}>
+              Delete
+            </PaneOption>
           </ContextMenu>
         )}
 

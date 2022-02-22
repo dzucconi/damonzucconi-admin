@@ -234,6 +234,7 @@ export type DeleteArtworkMutationPayload = {
   __typename?: 'DeleteArtworkMutationPayload';
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']>;
+  query: Query;
   success: Scalars['Boolean'];
 };
 
@@ -249,6 +250,7 @@ export type DeleteExhibitionMutationPayload = {
   __typename?: 'DeleteExhibitionMutationPayload';
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']>;
+  query: Query;
   success: Scalars['Boolean'];
 };
 
@@ -989,6 +991,8 @@ export type FilesUploaderQueryVariables = Exact<{
 
 export type FilesUploaderQuery = { __typename?: 'Query', presigned_upload_urls: Array<string> };
 
+export type ArtworkIndexPageFragment = { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string, material?: string | null, year: number, images: Array<{ __typename?: 'Image', title?: string | null, thumb: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } }, preview: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> }> };
+
 export type ArtworkIndexPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1017,6 +1021,15 @@ export type ArtworkShowPageUpdateMutationVariables = Exact<{
 
 
 export type ArtworkShowPageUpdateMutation = { __typename?: 'Mutation', update_artwork?: { __typename?: 'UpdateArtworkMutationPayload', artwork: { __typename?: 'Artwork', id: string, slug: string, state: State, title: string, year: number, material?: string | null, duration?: string | null, gloss?: string | null, description?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, dimensions?: { __typename?: 'Dimensions', inches: { __typename?: 'Dimension', width?: number | null, height?: number | null, depth?: number | null, unit?: string | null } } | null, images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, url: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, links: Array<{ __typename?: 'Link', id: string, title?: string | null, url: string, state: State, kind: Kind, display: string }>, embeds: Array<{ __typename?: 'Embed', id: string, html: string }>, attachments: Array<{ __typename?: 'Attachment', id: string, file_name: string, file_type: string, state: State, title?: string | null, url: string }>, editions: Array<{ __typename?: 'Edition', id: string, state: EditionState, collector?: string | null, location?: string | null, notes?: string | null, is_attributable: boolean }> } } | null };
+
+export type DeleteArtworkMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteArtworkMutation = { __typename?: 'Mutation', delete_artwork?: { __typename?: 'DeleteArtworkMutationPayload', query: { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string, material?: string | null, year: number, images: Array<{ __typename?: 'Image', title?: string | null, thumb: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } }, preview: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> }> } } | null };
+
+export type ExhibitionIndexPageFragment = { __typename?: 'Query', exhibitions: Array<{ __typename?: 'Exhibition', id: string, slug: string, title: string, state: State, kind: ExhibitionKind, year?: string | null, images: Array<{ __typename: 'Image' }> }> };
 
 export type ExhibitionIndexPageQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1047,6 +1060,44 @@ export type ExhibitionShowPageUpdateMutationVariables = Exact<{
 
 export type ExhibitionShowPageUpdateMutation = { __typename?: 'Mutation', update_exhibition?: { __typename?: 'UpdateExhibitionMutationPayload', exhibition: { __typename?: 'Exhibition', id: string, title: string, slug: string, state: State, city?: string | null, country?: string | null, description?: string | null, start_date?: string | null, end_date?: string | null, external_url?: string | null, kind: ExhibitionKind, venue?: string | null, primaryImage: Array<{ __typename?: 'Image', id: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }>, images: Array<{ __typename?: 'Image', id: string, width?: number | null, height?: number | null, title?: string | null, description?: string | null, url: string, thumbnail: { __typename?: 'ResizedImage', height: number, width: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> } } | null };
 
+export type DeleteExhibitionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteExhibitionMutation = { __typename?: 'Mutation', delete_exhibition?: { __typename?: 'DeleteExhibitionMutationPayload', query: { __typename?: 'Query', exhibitions: Array<{ __typename?: 'Exhibition', id: string, slug: string, title: string, state: State, kind: ExhibitionKind, year?: string | null, images: Array<{ __typename: 'Image' }> }> } } | null };
+
+export const ArtworkIndexPageFragmentDoc = gql`
+    fragment ArtworkIndexPageFragment on Query {
+  artworks {
+    id
+    state
+    slug
+    title
+    material
+    year
+    images(limit: 1) {
+      title
+      thumb: resized(width: 25, height: 25) {
+        width
+        height
+        urls {
+          _1x
+          _2x
+        }
+      }
+      preview: resized(width: 500, height: 500) {
+        width
+        height
+        urls {
+          _1x
+          _2x
+        }
+      }
+    }
+  }
+}
+    `;
 export const ArtworkAttributesFragmentDoc = gql`
     fragment ArtworkAttributesFragment on Artwork {
   id
@@ -1205,6 +1256,21 @@ ${ArtworkLinksFragmentDoc}
 ${ArtworkEmbedsFragmentDoc}
 ${ArtworkAttachmentsFragmentDoc}
 ${ArtworkEditionsFragmentDoc}`;
+export const ExhibitionIndexPageFragmentDoc = gql`
+    fragment ExhibitionIndexPageFragment on Query {
+  exhibitions {
+    id
+    slug
+    title
+    state
+    kind
+    year: start_date(format: "%Y")
+    images {
+      __typename
+    }
+  }
+}
+    `;
 export const ExhibitionAttributesFragmentDoc = gql`
     fragment ExhibitionAttributesFragment on Exhibition {
   id
@@ -1505,35 +1571,9 @@ export function useFilesUploaderQuery(options: Omit<Urql.UseQueryArgs<FilesUploa
 };
 export const ArtworkIndexPageQueryDocument = gql`
     query ArtworkIndexPageQuery {
-  artworks {
-    id
-    state
-    slug
-    title
-    material
-    year
-    images(limit: 1) {
-      title
-      thumb: resized(width: 25, height: 25) {
-        width
-        height
-        urls {
-          _1x
-          _2x
-        }
-      }
-      preview: resized(width: 500, height: 500) {
-        width
-        height
-        urls {
-          _1x
-          _2x
-        }
-      }
-    }
-  }
+  ...ArtworkIndexPageFragment
 }
-    `;
+    ${ArtworkIndexPageFragmentDoc}`;
 
 export function useArtworkIndexPageQuery(options?: Omit<Urql.UseQueryArgs<ArtworkIndexPageQueryVariables>, 'query'>) {
   return Urql.useQuery<ArtworkIndexPageQuery>({ query: ArtworkIndexPageQueryDocument, ...options });
@@ -1576,21 +1616,24 @@ export const ArtworkShowPageUpdateMutationDocument = gql`
 export function useArtworkShowPageUpdateMutation() {
   return Urql.useMutation<ArtworkShowPageUpdateMutation, ArtworkShowPageUpdateMutationVariables>(ArtworkShowPageUpdateMutationDocument);
 };
-export const ExhibitionIndexPageQueryDocument = gql`
-    query ExhibitionIndexPageQuery {
-  exhibitions {
-    id
-    slug
-    title
-    state
-    kind
-    year: start_date(format: "%Y")
-    images {
-      __typename
+export const DeleteArtworkMutationDocument = gql`
+    mutation DeleteArtworkMutation($id: ID!) {
+  delete_artwork(input: {id: $id}) {
+    query {
+      ...ArtworkIndexPageFragment
     }
   }
 }
-    `;
+    ${ArtworkIndexPageFragmentDoc}`;
+
+export function useDeleteArtworkMutation() {
+  return Urql.useMutation<DeleteArtworkMutation, DeleteArtworkMutationVariables>(DeleteArtworkMutationDocument);
+};
+export const ExhibitionIndexPageQueryDocument = gql`
+    query ExhibitionIndexPageQuery {
+  ...ExhibitionIndexPageFragment
+}
+    ${ExhibitionIndexPageFragmentDoc}`;
 
 export function useExhibitionIndexPageQuery(options?: Omit<Urql.UseQueryArgs<ExhibitionIndexPageQueryVariables>, 'query'>) {
   return Urql.useQuery<ExhibitionIndexPageQuery>({ query: ExhibitionIndexPageQueryDocument, ...options });
@@ -1632,4 +1675,17 @@ export const ExhibitionShowPageUpdateMutationDocument = gql`
 
 export function useExhibitionShowPageUpdateMutation() {
   return Urql.useMutation<ExhibitionShowPageUpdateMutation, ExhibitionShowPageUpdateMutationVariables>(ExhibitionShowPageUpdateMutationDocument);
+};
+export const DeleteExhibitionMutationDocument = gql`
+    mutation DeleteExhibitionMutation($id: ID!) {
+  delete_exhibition(input: {id: $id}) {
+    query {
+      ...ExhibitionIndexPageFragment
+    }
+  }
+}
+    ${ExhibitionIndexPageFragmentDoc}`;
+
+export function useDeleteExhibitionMutation() {
+  return Urql.useMutation<DeleteExhibitionMutation, DeleteExhibitionMutationVariables>(DeleteExhibitionMutationDocument);
 };
