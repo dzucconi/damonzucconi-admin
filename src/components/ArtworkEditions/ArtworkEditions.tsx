@@ -1,20 +1,8 @@
 import React from "react";
 import gql from "graphql-tag";
-import { Button, Stack, Plus, Input } from "@auspices/eos";
+import { Button, Stack, Plus, Grid } from "@auspices/eos";
 import { ArtworkEditionsFragment } from "../../generated/graphql";
-
-export const ARTWORK_EDITIONS_FRAGMENT = gql`
-  fragment ArtworkEditionsFragment on Artwork {
-    editions {
-      id
-      state
-      collector
-      location
-      notes
-      is_attributable
-    }
-  }
-`;
+import { ArtworkEditionsEdition } from "./ArtworkEditionsEdition";
 
 export type ArtworkEditionsProps = {
   artwork: ArtworkEditionsFragment;
@@ -31,31 +19,29 @@ export const ArtworkEditions: React.FC<ArtworkEditionsProps> = ({
         Edition
       </Button>
 
-      {artwork.editions.map((edition) => {
-        return (
-          <Stack key={edition.id} direction="horizontal">
-            <Input value={edition.state} />
-
-            <Input
-              defaultValue={edition.collector || ""}
-              placeholder="collector"
-              flex={1}
-            />
-
-            <Input
-              defaultValue={edition.location || ""}
-              placeholder="location"
-              flex={1}
-            />
-
-            <Input
-              defaultValue={edition.notes || ""}
-              placeholder="notes"
-              flex={1}
-            />
-          </Stack>
-        );
-      })}
+      {artwork.editions.length > 0 && (
+        <Grid my={6}>
+          {artwork.editions.map((edition) => {
+            return (
+              <ArtworkEditionsEdition
+                key={edition.id}
+                artworkId={artwork.id}
+                edition={edition}
+              />
+            );
+          })}
+        </Grid>
+      )}
     </Stack>
   );
 };
+
+gql`
+  fragment ArtworkEditionsFragment on Artwork {
+    id
+    editions {
+      ...ArtworkEditionsEdition_edition
+      id
+    }
+  }
+`;
