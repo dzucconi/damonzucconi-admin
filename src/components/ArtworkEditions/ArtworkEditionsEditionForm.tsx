@@ -192,7 +192,7 @@ gql`
 gql`
   mutation RemoveEdition($artworkId: ID!, $editionId: ID!) {
     remove_artwork_entity(
-      input: { id: $artworkId, entity: { id: $editionId, type: LINK } }
+      input: { id: $artworkId, entity: { id: $editionId, type: EDITION } }
     ) {
       artwork {
         ...ArtworkEditionsFragment
