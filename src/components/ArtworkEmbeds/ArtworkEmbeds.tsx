@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
-import { Stack, Button, Plus, Modal, Grid } from "@auspices/eos";
+import { Stack, Button, Plus, Modal, Grid, Tooltip } from "@auspices/eos";
 import { ArtworkEmbedsFragment } from "../../generated/graphql";
 import { ArtworkEmbedsEmbedForm } from "./ArtworkEmbedsEmbedForm";
 import { ArtworkEmbedsEmbed } from "./ArtworkEmbedsEmbed";
@@ -42,10 +42,12 @@ export const ArtworkEmbeds: React.FC<ArtworkEmbedsProps> = ({
       )}
 
       <Stack {...rest}>
-        <Button onClick={handleClick}>
-          <Plus size={4} strokeWidth="1px" mr={3} />
-          Embed
-        </Button>
+        <Tooltip label="Click to add an embed" placement="bottom" distance={10}>
+          <Button onClick={handleClick}>
+            <Plus size={4} strokeWidth="1px" mr={3} />
+            Embed
+          </Button>
+        </Tooltip>
 
         {artwork.embeds.length > 0 && (
           <Grid my={6}>

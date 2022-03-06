@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
-import { Stack, Button, Plus, Modal, Grid } from "@auspices/eos";
+import { Stack, Button, Plus, Modal, Grid, Tooltip } from "@auspices/eos";
 import { ArtworkLinksFragment } from "../../generated/graphql";
 import { ArtworkLinksLinkForm } from "./ArtworkLinksLinkForm";
 import { ArtworkLinksLink } from "./ArtworkLinksLink";
@@ -42,10 +42,12 @@ export const ArtworkLinks: React.FC<ArtworkLinksProps> = ({
       )}
 
       <Stack {...rest}>
-        <Button onClick={handleClick}>
-          <Plus size={4} strokeWidth="1px" mr={3} />
-          Link
-        </Button>
+        <Tooltip label="Click to add link" placement="bottom" distance={10}>
+          <Button onClick={handleClick}>
+            <Plus size={4} strokeWidth="1px" mr={3} />
+            Link
+          </Button>
+        </Tooltip>
 
         {artwork.links.length > 0 && (
           <Grid my={6}>

@@ -85,7 +85,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
   return (
     <>
-      <Tooltip label="click to add files" placement="bottom" distance={10}>
+      <Tooltip label="Click to add files" placement="bottom" distance={10}>
         <Box display="flex" height="auto">
           <FileInput
             id={id}
