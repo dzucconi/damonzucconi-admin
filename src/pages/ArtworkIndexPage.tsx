@@ -13,47 +13,17 @@ import {
   ResponsiveImage,
   ClearableInput,
   Stack,
+  PaneOption,
+  ContextMenu,
 } from "@auspices/eos";
-import { useArtworkIndexPageQuery } from "../generated/graphql";
+import {
+  OrderableAction,
+  useArtworkIndexPageQuery,
+  useReorderArtworkMutation,
+} from "../generated/graphql";
 import { Table } from "../components/Table";
 import { useKeyboardListNavigation } from "use-keyboard-list-navigation";
 import { useHistory } from "react-router";
-
-gql`
-  fragment ArtworkIndexPageFragment on Query {
-    artworks {
-      id
-      state
-      slug
-      title
-      material
-      year
-      images(limit: 1) {
-        title
-        thumb: resized(width: 25, height: 25) {
-          width
-          height
-          urls {
-            _1x
-            _2x
-          }
-        }
-        preview: resized(width: 500, height: 500) {
-          width
-          height
-          urls {
-            _1x
-            _2x
-          }
-        }
-      }
-    }
-  }
-
-  query ArtworkIndexPageQuery {
-    ...ArtworkIndexPageFragment
-  }
-`;
 
 export const ArtworkIndexPage: React.FC = () => {
   const [{ data, fetching, error }] = useArtworkIndexPageQuery();
@@ -76,6 +46,13 @@ export const ArtworkIndexPage: React.FC = () => {
       history.push(`/artworks/${element.slug}`);
     },
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, reorderArtwork] = useReorderArtworkMutation();
+
+  const handleReorder = (id: string, action: OrderableAction) => {
+    reorderArtwork({ id, action });
+  };
 
   if (error) {
     throw error;
@@ -125,6 +102,12 @@ export const ArtworkIndexPage: React.FC = () => {
               <th>
                 <Cell borderWidth={0} justifyContent="center">
                   Year
+                </Cell>
+              </th>
+
+              <th>
+                <Cell borderWidth={0} justifyContent="center">
+                  Actions
                 </Cell>
               </th>
             </tr>
@@ -209,6 +192,45 @@ export const ArtworkIndexPage: React.FC = () => {
                   <td>
                     <Cell borderWidth={0}>{artwork.year}</Cell>
                   </td>
+
+                  <td>
+                    <ContextMenu display="flex" justifyContent="center">
+                      <PaneOption
+                        onClick={() => {
+                          handleReorder(artwork.id, OrderableAction.MoveToTop);
+                        }}
+                      >
+                        Move to top
+                      </PaneOption>
+
+                      <PaneOption
+                        onClick={() => {
+                          handleReorder(
+                            artwork.id,
+                            OrderableAction.MoveToBottom
+                          );
+                        }}
+                      >
+                        Move to bottom
+                      </PaneOption>
+
+                      <PaneOption
+                        onClick={() => {
+                          handleReorder(artwork.id, OrderableAction.MoveUp);
+                        }}
+                      >
+                        Move up
+                      </PaneOption>
+
+                      <PaneOption
+                        onClick={() => {
+                          handleReorder(artwork.id, OrderableAction.MoveDown);
+                        }}
+                      >
+                        Move down
+                      </PaneOption>
+                    </ContextMenu>
+                  </td>
                 </tr>
               );
             })}
@@ -218,3 +240,49 @@ export const ArtworkIndexPage: React.FC = () => {
     </>
   );
 };
+
+gql`
+  fragment ArtworkIndexPageFragment on Query {
+    artworks {
+      id
+      state
+      slug
+      title
+      material
+      year
+      images(limit: 1) {
+        title
+        thumb: resized(width: 25, height: 25) {
+          width
+          height
+          urls {
+            _1x
+            _2x
+          }
+        }
+        preview: resized(width: 500, height: 500) {
+          width
+          height
+          urls {
+            _1x
+            _2x
+          }
+        }
+      }
+    }
+  }
+
+  query ArtworkIndexPageQuery {
+    ...ArtworkIndexPageFragment
+  }
+`;
+
+gql`
+  mutation ReorderArtwork($id: ID!, $action: OrderableAction!) {
+    reorder_artwork(input: { id: $id, action: $action }) {
+      query {
+        ...ArtworkIndexPageFragment
+      }
+    }
+  }
+`;

@@ -1073,6 +1073,14 @@ export type ArtworkIndexPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ArtworkIndexPageQuery = { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string, material?: string | null, year: number, images: Array<{ __typename?: 'Image', title?: string | null, thumb: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } }, preview: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> }> };
 
+export type ReorderArtworkMutationVariables = Exact<{
+  id: Scalars['ID'];
+  action: OrderableAction;
+}>;
+
+
+export type ReorderArtworkMutation = { __typename?: 'Mutation', reorder_artwork?: { __typename?: 'ReorderArtworkMutationPayload', query: { __typename?: 'Query', artworks: Array<{ __typename?: 'Artwork', id: string, state: State, slug: string, title: string, material?: string | null, year: number, images: Array<{ __typename?: 'Image', title?: string | null, thumb: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } }, preview: { __typename?: 'ResizedImage', width: number, height: number, urls: { __typename?: 'RetinaImage', _1x: string, _2x: string } } }> }> } } | null };
+
 export type AddArtworkMutationVariables = Exact<{
   attributes: ArtworkAttributes;
 }>;
@@ -1710,6 +1718,19 @@ export const ArtworkIndexPageQueryDocument = gql`
 
 export function useArtworkIndexPageQuery(options?: Omit<Urql.UseQueryArgs<ArtworkIndexPageQueryVariables>, 'query'>) {
   return Urql.useQuery<ArtworkIndexPageQuery>({ query: ArtworkIndexPageQueryDocument, ...options });
+};
+export const ReorderArtworkDocument = gql`
+    mutation ReorderArtwork($id: ID!, $action: OrderableAction!) {
+  reorder_artwork(input: {id: $id, action: $action}) {
+    query {
+      ...ArtworkIndexPageFragment
+    }
+  }
+}
+    ${ArtworkIndexPageFragmentDoc}`;
+
+export function useReorderArtworkMutation() {
+  return Urql.useMutation<ReorderArtworkMutation, ReorderArtworkMutationVariables>(ReorderArtworkDocument);
 };
 export const AddArtworkMutationDocument = gql`
     mutation AddArtworkMutation($attributes: ArtworkAttributes!) {
